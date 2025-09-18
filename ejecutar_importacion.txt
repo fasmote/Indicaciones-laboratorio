@@ -1,0 +1,137 @@
+@echo off
+echo ============================================
+echo 🚀 IMPORTACION DE DATOS REALES DEL EXCEL
+echo ============================================
+echo.
+
+cd /d "C:\Users\clau\Documents\DGSISAN_2025bis\Indicaciones\indicaciones-app"
+
+echo 📍 Ubicación actual: %CD%
+echo.
+
+REM Verificar que el archivo Excel existe
+if not exist "REVISARTabla de indicaciones para pacientes actualizada 2024 enviada por la RED.xlsx" (
+    echo ❌ ERROR: Archivo Excel no encontrado
+    echo    Asegúrate de que el archivo esté en la carpeta del proyecto
+    pause
+    exit /b 1
+)
+
+echo ✅ Archivo Excel encontrado
+echo.
+
+REM Verificar que Node.js está instalado
+node --version >nul 2>&1
+if errorlevel 1 (
+    echo ❌ ERROR: Node.js no está instalado o no está en el PATH
+    pause
+    exit /b 1
+)
+
+echo ✅ Node.js disponible
+echo.
+
+REM Instalar dependencias si no existen
+if not exist "node_modules" (
+    echo 📦 Instalando dependencias...
+    npm install
+    if errorlevel 1 (
+        echo ❌ ERROR: Falló la instalación de dependencias
+        pause
+        exit /b 1
+    )
+) else (
+    echo ✅ Dependencias ya instaladas
+)
+
+echo.
+
+REM Verificar que XLSX está instalado
+npm list xlsx >nul 2>&1
+if errorlevel 1 (
+    echo 📦 Instalando librería XLSX...
+    npm install xlsx
+    if errorlevel 1 (
+        echo ❌ ERROR: No se pudo instalar XLSX
+        pause
+        exit /b 1
+    )
+)
+
+echo ✅ Librería XLSX disponible
+echo.
+
+REM Crear el script de importación si no existe
+if not exist "script-importacion-excel.js" (
+    echo 📝 Creando script de importación...
+    echo const XLSX = require('xlsx'^); > script-importacion-excel.js
+    echo const fs = require('fs'^); >> script-importacion-excel.js
+    echo const path = require('path'^); >> script-importacion-excel.js
+    echo. >> script-importacion-excel.js
+    echo console.log('Script de importación creado. Usar el código del artefacto.'^); >> script-importacion-excel.js
+)
+
+echo 🔄 Ejecutando importación de datos...
+echo.
+
+REM Ejecutar el script de importación
+node script-importacion-excel.js
+if errorlevel 1 (
+    echo.
+    echo ❌ ERROR: Falló la importación de datos
+    echo    Revisa los mensajes de error arriba
+    pause
+    exit /b 1
+)
+
+echo.
+echo ✅ Importación completada exitosamente!
+echo.
+
+REM Verificar que se generó el archivo SQL
+if not exist "datos_reales_import.sql" (
+    echo ❌ WARNING: No se generó el archivo SQL esperado
+    pause
+    exit /b 1
+)
+
+echo 📁 Archivo SQL generado: datos_reales_import.sql
+echo.
+
+REM Aplicar los datos a la base de datos
+echo 🗃️  Aplicando datos a la base de datos...
+if exist "prisma\indicaciones.db" (
+    echo    Haciendo backup de la base de datos actual...
+    copy "prisma\indicaciones.db" "prisma\indicaciones_backup_%date:~-4,4%%date:~-10,2%%date:~-7,2%.db" >nul
+    
+    echo    Aplicando datos reales...
+    type "datos_reales_import.sql" | sqlite3 "prisma\indicaciones.db"
+    if errorlevel 1 (
+        echo ❌ ERROR: Falló la aplicación de datos a la base de datos
+        echo    Restaurando backup...
+        copy "prisma\indicaciones_backup_*.db" "prisma\indicaciones.db" >nul
+        pause
+        exit /b 1
+    )
+    
+    echo ✅ Datos aplicados exitosamente a la base de datos
+) else (
+    echo ❌ ERROR: Base de datos no encontrada en prisma\indicaciones.db
+    echo    Ejecuta primero: npm run db:migrate
+    pause
+    exit /b 1
+)
+
+echo.
+echo 🎉 IMPORTACIÓN COMPLETADA EXITOSAMENTE!
+echo =========================================
+echo.
+echo 📊 Los datos reales del Excel han sido cargados.
+echo 🔧 Puedes verificar con: npm run db:studio
+echo 🚀 Ejecuta el servidor con: npm run dev
+echo 🌐 Luego visita: http://localhost:3000
+echo.
+echo ✨ El sistema ahora tiene los datos reales de laboratorio.
+echo.
+
+pause

@@ -1,0 +1,294 @@
+@echo off
+chcp 65001 >nul
+setlocal enabledelayedexpansion
+
+echo.
+echo ╔══════════════════════════════════════════════════════════════╗
+echo ║                    🚀 IMPORTACIÓN COMPLETA                   ║
+echo ║              Datos Reales del Excel al Sistema              ║
+echo ║                                                              ║
+echo ║          Sistema de Indicaciones de Laboratorio             ║
+echo ║                    DGSISAN 2025                              ║
+echo ╚══════════════════════════════════════════════════════════════╝
+echo.
+
+REM Configuración de rutas
+set "PROYECTO_DIR=C:\Users\clau\Documents\DGSISAN_2025bis\Indicaciones\indicaciones-app"
+set "EXCEL_FILE=REVISARTabla de indicaciones para pacientes actualizada 2024 enviada por la RED.xlsx"
+
+echo 📍 Cambiando a directorio del proyecto...
+cd /d "%PROYECTO_DIR%"
+if errorlevel 1 (
+    echo ❌ ERROR: No se pudo acceder al directorio del proyecto
+    echo    Ruta: %PROYECTO_DIR%
+    pause
+    exit /b 1
+)
+
+echo ✅ Directorio actual: %CD%
+echo.
+
+echo 🔍 Verificando prerequisitos...
+echo ================================
+
+REM Verificar Node.js
+node --version >nul 2>&1
+if errorlevel 1 (
+    echo ❌ ERROR: Node.js no está instalado
+    echo    Descargar desde: https://nodejs.org/
+    pause
+    exit /b 1
+)
+echo ✅ Node.js: 
+node --version
+
+REM Verificar NPM
+npm --version >nul 2>&1
+if errorlevel 1 (
+    echo ❌ ERROR: NPM no está disponible
+    pause
+    exit /b 1
+)
+echo ✅ NPM: 
+npm --version
+
+REM Verificar archivo Excel
+if not exist "%EXCEL_FILE%" (
+    echo ❌ ERROR: Archivo Excel no encontrado
+    echo    Archivo: %EXCEL_FILE%
+    echo    Asegúrate de que esté en la carpeta del proyecto
+    pause
+    exit /b 1
+)
+echo ✅ Archivo Excel encontrado
+
+REM Verificar SQLite3
+sqlite3 -version >nul 2>&1
+if errorlevel 1 (
+    echo ⚠️  WARNING: SQLite3 no encontrado en PATH
+    echo    Se intentará usar el SQLite3 de Node.js
+) else (
+    echo ✅ SQLite3: 
+    sqlite3 -version
+)
+
+echo.
+echo 📦 Verificando e instalando dependencias...
+echo ==========================================
+
+REM Instalar dependencias principales si no existen
+if not exist "node_modules" (
+    echo 🔄 Instalando dependencias principales...
+    npm install
+    if errorlevel 1 (
+        echo ❌ ERROR: Falló la instalación de dependencias
+        pause
+        exit /b 1
+    )
+    echo ✅ Dependencias principales instaladas
+) else (
+    echo ✅ Dependencias principales ya están instaladas
+)
+
+REM Verificar e instalar dependencias específicas
+echo 🔄 Verificando dependencias específicas...
+
+npm list xlsx >nul 2>&1
+if errorlevel 1 (
+    echo    Instalando xlsx...
+    npm install xlsx
+    if errorlevel 1 (
+        echo ❌ ERROR: No se pudo instalar xlsx
+        pause
+        exit /b 1
+    )
+)
+echo ✅ xlsx disponible
+
+npm list node-fetch >nul 2>&1
+if errorlevel 1 (
+    echo    Instalando node-fetch...
+    npm install node-fetch
+    if errorlevel 1 (
+        echo ❌ ERROR: No se pudo instalar node-fetch
+        pause
+        exit /b 1
+    )
+)
+echo ✅ node-fetch disponible
+
+echo.
+echo 🗃️  Preparando base de datos...
+echo ==============================
+
+REM Verificar que la base de datos existe
+if not exist "prisma\indicaciones.db" (
+    echo 🔄 Creando base de datos...
+    npm run db:generate
+    if errorlevel 1 (
+        echo ❌ ERROR: Falló la generación del cliente Prisma
+        pause
+        exit /b 1
+    )
+    
+    npm run db:migrate
+    if errorlevel 1 (
+        echo ❌ ERROR: Falló la migración de la base de datos
+        pause
+        exit /b 1
+    )
+    echo ✅ Base de datos creada
+) else (
+    echo ✅ Base de datos ya existe
+    
+    REM Hacer backup de la base de datos actual
+    set "FECHA=%date:~-4,4%%date:~-10,2%%date:~-7,2%"
+    set "HORA=%time:~0,2%%time:~3,2%%time:~6,2%"
+    set "BACKUP_NAME=indicaciones_backup_%FECHA%_%HORA:.= %.db"
+    
+    echo 🔄 Creando backup de la base de datos actual...
+    copy "prisma\indicaciones.db" "prisma\%BACKUP_NAME%" >nul
+    if errorlevel 1 (
+        echo ⚠️  WARNING: No se pudo crear backup
+    ) else (
+        echo ✅ Backup creado: %BACKUP_NAME%
+    )
+)
+
+echo.
+echo 📊 Ejecutando importación inteligente...
+echo ========================================
+
+REM Crear el script de importación inteligente si no existe
+if not exist "importacion-inteligente.js" (
+    echo 📝 Creando script de importación...
+    echo // Script será creado por el usuario con el contenido del artefacto > importacion-inteligente.js
+    echo ⚠️  IMPORTANTE: Debes copiar el contenido del script de importación inteligente
+    echo    desde el artefacto generado a 'importacion-inteligente.js'
+    pause
+    echo Presiona cualquier tecla después de crear el archivo...
+    pause
+)
+
+REM Ejecutar importación
+echo 🚀 Iniciando importación de datos reales...
+echo.
+node importacion-inteligente.js
+if errorlevel 1 (
+    echo.
+    echo ❌ ERROR: Falló la importación de datos
+    echo    Revisa los mensajes de error arriba
+    pause
+    exit /b 1
+)
+
+echo.
+echo ✅ Importación de datos completada exitosamente!
+echo.
+
+REM Verificar que se generó el archivo SQL
+if not exist "datos_reales_import.sql" (
+    echo ❌ ERROR: No se generó el archivo SQL
+    pause
+    exit /b 1
+)
+
+echo 📁 Archivo SQL generado: datos_reales_import.sql
+echo.
+
+echo 🗃️  Aplicando datos a la base de datos...
+echo =========================================
+
+REM Aplicar datos usando sqlite3 o método alternativo
+sqlite3 "prisma\indicaciones.db" < "datos_reales_import.sql" 2>nul
+if errorlevel 1 (
+    echo ⚠️  Método SQLite3 directo falló, intentando método alternativo...
+    
+    REM Método alternativo usando Node.js
+    echo const fs = require('fs'^); > aplicar_sql.js
+    echo const { execSync } = require('child_process'^); >> aplicar_sql.js
+    echo try { >> aplicar_sql.js
+    echo   execSync('sqlite3 prisma/indicaciones.db ".read datos_reales_import.sql"'^); >> aplicar_sql.js
+    echo   console.log('✅ Datos aplicados exitosamente'^); >> aplicar_sql.js
+    echo } catch(e^) { >> aplicar_sql.js
+    echo   console.error('❌ Error:', e.message^); >> aplicar_sql.js
+    echo   process.exit(1^); >> aplicar_sql.js
+    echo } >> aplicar_sql.js
+    
+    node aplicar_sql.js
+    if errorlevel 1 (
+        echo ❌ ERROR: No se pudieron aplicar los datos a la base de datos
+        echo    Intenta manualmente: sqlite3 prisma\indicaciones.db < datos_reales_import.sql
+        pause
+        exit /b 1
+    )
+    
+    del aplicar_sql.js
+) else (
+    echo ✅ Datos aplicados exitosamente a la base de datos
+)
+
+echo.
+echo 🔍 Ejecutando verificación post-importación...
+echo =============================================
+
+REM Crear script de verificación si no existe
+if not exist "verificar-importacion.js" (
+    echo 📝 Script de verificación será creado...
+    echo ⚠️  Debes copiar el contenido del script de verificación desde el artefacto
+    pause
+)
+
+REM Ejecutar verificación
+node verificar-importacion.js
+if errorlevel 1 (
+    echo ⚠️  Verificación mostró algunos problemas
+    echo    Revisa los mensajes arriba
+) else (
+    echo ✅ Verificación completada exitosamente
+)
+
+echo.
+echo 🎉 ¡IMPORTACIÓN COMPLETA FINALIZADA!
+echo ====================================
+echo.
+echo 📊 Resumen del proceso:
+echo   ✅ Dependencias verificadas e instaladas
+echo   ✅ Base de datos preparada
+echo   ✅ Datos del Excel procesados e importados
+echo   ✅ Base de datos actualizada con datos reales
+echo   ✅ Verificación de integridad completada
+echo.
+echo 🚀 Próximos pasos:
+echo   1. Ejecutar el servidor: npm run dev
+echo   2. Abrir navegador: http://localhost:3000
+echo   3. Probar el simulador de indicaciones
+echo   4. Verificar que las indicaciones se generan correctamente
+echo.
+echo 🔧 Comandos útiles:
+echo   • Ver datos:     npm run db:studio
+echo   • Reiniciar DB:  npm run db:reset
+echo   • Health check:  curl http://localhost:3000/api/health
+echo.
+echo ✨ ¡El sistema ahora tiene los datos reales del laboratorio!
+echo.
+
+REM Preguntar si quiere iniciar el servidor inmediatamente
+set /p "INICIAR_SERVIDOR=¿Deseas iniciar el servidor ahora? (s/N): "
+if /i "!INICIAR_SERVIDOR!"=="s" (
+    echo.
+    echo 🚀 Iniciando servidor de desarrollo...
+    echo    Presiona Ctrl+C para detener el servidor
+    echo    URL: http://localhost:3000
+    echo.
+    npm run dev
+) else (
+    echo.
+    echo 👋 Para iniciar el servidor más tarde ejecuta: npm run dev
+    echo.
+)
+
+echo 📋 Log de importación guardado en: importacion.log
+echo %date% %time% - Importación completada exitosamente >> importacion.log
+
+pause

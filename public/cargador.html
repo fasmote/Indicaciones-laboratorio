@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargador de Datos Reales - Sistema de Indicaciones</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 200px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-container {
+            display: none;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        .log-container {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Cargador de Datos Reales</h1>
+            <p>Importación masiva de las 880 prácticas del Excel al sistema</p>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Atención:</strong> Esta operación reemplazará TODOS los datos actuales con los datos reales del Excel. 
+            La operación no se puede deshacer desde esta interfaz.
+        </div>
+
+        <div class="section">
+            <h2>📊 Estado Actual del Sistema</h2>
+            <div id="current-stats" class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="current-practicas">-</div>
+                    <div class="stat-label">Prácticas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="current-grupos">-</div>
+                    <div class="stat-label">Grupos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="current-indicaciones">-</div>
+                    <div class="stat-label">Indicaciones</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="cargarEstadoActual()">🔄 Actualizar Estado</button>
+        </div>
+
+        <div class="section">
+            <h2>📁 Cargar Datos Reales</h2>
+            <p>Este proceso:</p>
+            <ul style="margin: 15px 0 15px 30px; color: #666;">
+                <li>✅ Leerá el archivo Excel con 880 prácticas reales</li>
+                <li>🤖 Analizará automáticamente las indicaciones</li>
+                <li>📁 Creará grupos inteligentes basados en patrones</li>
+                <li>🔗 Vinculará prácticas con sus respectivos grupos</li>
+                <li>💾 Cargará todo a la base de datos</li>
+            </ul>
+
+            <div class="action-buttons">
+                <button class="btn btn-success" id="load-btn" onclick="iniciarCargaDatos()">
+                    🚀 Cargar Datos Reales del Excel
+                </button>
+                <button class="btn btn-primary" onclick="cargarDatosPrueba()">
+                    🧪 Restaurar Datos de Prueba
+                </button>
+            </div>
+
+            <div class="progress-container" id="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text" id="progress-text">Procesando...</div>
+            </div>
+        </div>
+
+        <div id="result-section" style="display: none;">
+            <div class="section">
+                <h2>📊 Resultados</h2>
+                <div id="result-stats" class="stats-grid"></div>
+                <div id="result-message"></div>
+            </div>
+        </div>
+
+        <div id="log-section" style="display: none;">
+            <h3>📋 Log del Proceso</h3>
+            <div id="log-container" class="log-container"></div>
+        </div>
+
+        <a href="/" class="back-link">← Volver al Sistema Principal</a>
+    </div>
+
+    <script>
+        let logContainer;
+
+        function log(message, type = 'info') {
+            if (!logContainer) {
+                logContainer = document.getElementById('log-container');
+                document.getElementById('log-section').style.display = 'block';
+            }
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : '📋';
+            logContainer.textContent += `[${timestamp}] ${prefix} ${message}\n`;
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function updateProgress(percent, message) {
+            document.getElementById('progress-fill').style.width = percent + '%';
+            document.getElementById('progress-text').textContent = message;
+        }
+
+        function showProgress() {
+            document.getElementById('progress-container').style.display = 'block';
+            updateProgress(0, 'Iniciando...');
+        }
+
+        function hideProgress() {
+            document.getElementById('progress-container').style.display = 'none';
+        }
+
+        async function cargarEstadoActual() {
+            try {
+                const response = await fetch('/api/debug/count');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('current-practicas').textContent = data.data.practicas;
+                    document.getElementById('current-grupos').textContent = data.data.grupos;
+                    document.getElementById('current-indicaciones').textContent = data.data.indicaciones;
+                } else {
+                    throw new Error('Error obteniendo estado');
+                }
+            } catch (error) {
+                console.error('Error cargando estado:', error);
+                document.getElementById('current-practicas').textContent = 'Error';
+                document.getElementById('current-grupos').textContent = 'Error';
+                document.getElementById('current-indicaciones').textContent = 'Error';
+            }
+        }
+
+        async function iniciarCargaDatos() {
+            const loadBtn = document.getElementById('load-btn');
+            loadBtn.disabled = true;
+            loadBtn.textContent = '⏳ Cargando...';
+            
+            try {
+                showProgress();
+                log('Iniciando carga de datos reales del Excel');
+                
+                updateProgress(10, 'Leyendo archivo Excel...');
+                
+                // Leer el archivo Excel usando window.fs
+                const excelData = await window.fs.readFile('REVISARTabla de indicaciones para pacientes actualizada 2024 enviada por la RED.xlsx');
+                log('Archivo Excel leído exitosamente');
+                
+                updateProgress(30, 'Procesando datos del Excel...');
+                
+                // Importar SheetJS dinámicamente
+                const XLSX = await import('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
+                const workbook = XLSX.read(excelData);
+                const practicasSheet = workbook.Sheets['PRACTICAS'];
+                const excelRows = XLSX.utils.sheet_to_json(practicasSheet, { header: 1, defval: null });
+                
+                log(`Procesadas ${excelRows.length} filas del Excel`);
+                updateProgress(50, 'Enviando datos al servidor...');
+                
+                // Enviar datos al servidor para procesamiento
+                const response = await fetch('/api/indicaciones/cargar-reales', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        excelData: excelRows.slice(1) // Saltar header
+                    })
+                });
+                
+                updateProgress(80, 'Procesando en el servidor...');
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    updateProgress(100, '¡Completado!');
+                    log('Carga de datos completada exitosamente', 'success');
+                    
+                    // Mostrar resultados
+                    document.getElementById('result-section').style.display = 'block';
+                    document.getElementById('result-message').innerHTML = `
+                        <div class="success">
+                            <strong>🎉 ¡Carga Exitosa!</strong><br>
+                            Los datos reales han sido cargados correctamente.
+                        </div>
+                    `;
+                    
+                    // Mostrar estadísticas
+                    const stats = result.estadisticas;
+                    document.getElementById('result-stats').innerHTML = `
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.practicas}</div>
+                            <div class="stat-label">Prácticas Creadas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.grupos}</div>
+                            <div class="stat-label">Grupos Generados</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.indicaciones}</div>
+                            <div class="stat-label">Indicaciones Únicas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">${stats.vinculacionesPG}</div>
+                            <div class="stat-label">Vinculaciones P-G</div>
+                        </div>
+                    `;
+                    
+                    log(`Estadísticas finales: ${stats.practicas} prácticas, ${stats.grupos} grupos, ${stats.indicaciones} indicaciones`);
+                    
+                    // Mostrar grupos creados
+                    if (result.grupos) {
+                        log('Grupos creados:');
+                        result.grupos.forEach(grupo => {
+                            log(`  - ${grupo.nombre} (${grupo.practicas} prácticas)`);
+                        });
+                    }
+                    
+                    hideProgress();
+                    
+                } else {
+                    throw new Error(result.message || 'Error en la carga');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                log(`Error en la carga: ${error.message}`, 'error');
+                
+                document.getElementById('result-section').style.display = 'block';
+                document.getElementById('result-message').innerHTML = `
+                    <div class="error">
+                        <strong>❌ Error en la Carga</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+                
+                hideProgress();
+                
+            } finally {
+                loadBtn.disabled = false;
+                loadBtn.textContent = '🚀 Cargar Datos Reales del Excel';
+            }
+        }
+
+        async function cargarDatosPrueba() {
+            try {
+                log('Restaurando datos de prueba...');
+                const response = await fetch('/api/indicaciones/seed', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    log('Datos de prueba restaurados exitosamente', 'success');
+                    document.getElementById('result-section').style.display = 'block';
+                    document.getElementById('result-message').innerHTML = `
+                        <div class="success">
+                            <strong>🧪 Datos de Prueba Restaurados</strong><br>
+                            El sistema ha vuelto a los datos de prueba originales.
+                        </div>
+                    `;
+                    cargarEstadoActual();
+                } else {
+                    throw new Error(result.message);
+                }
+                
+            } catch (error) {
+                log(`Error restaurando datos de prueba: ${error.message}`, 'error');
+            }
+        }
+
+        // Cargar estado actual al iniciar la página
+        window.onload = function() {
+            cargarEstadoActual();
+        };
+    </script>
+</body>
+</html>

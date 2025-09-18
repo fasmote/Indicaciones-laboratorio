@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Indicaciones de Laboratorio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 20px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a67d8;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-info {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #138496;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #667eea;
+            color: white;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .checkbox-group {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .checkbox-item {
+            margin-bottom: 10px;
+        }
+
+        .checkbox-item label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .result-section {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .indicator-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .indicator-item h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .indicator-item p {
+            color: #666;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-active { background: #28a745; }
+        .status-inactive { background: #dc3545; }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Sistema de Indicaciones de Laboratorio</h1>
+            <p>Gestión inteligente de indicaciones compatibles para prácticas de laboratorio</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('simulator')">🧪 Simulador</button>
+            <button class="tab" onclick="showTab('practicas')">📋 Prácticas</button>
+            <button class="tab" onclick="showTab('grupos')">📁 Grupos</button>
+            <button class="tab" onclick="showTab('indicaciones')">📝 Indicaciones</button>
+        </div>
+
+        <!-- Tab: Simulador -->
+        <div id="simulator" class="tab-content active">
+            <div class="section">
+                <h2>🎯 Simulador de Indicaciones</h2>
+                <p>Selecciona las prácticas que se van a realizar y el sistema generará las indicaciones optimizadas.</p>
+                
+                <div class="form-group">
+                    <label>Seleccionar Prácticas:</label>
+                    <div id="practicas-list" class="checkbox-group">
+                        <div class="loading">Cargando prácticas...</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-success" onclick="generarIndicaciones()">
+                    🚀 Generar Indicaciones
+                </button>
+
+                <div id="result-container" style="display: none;" class="result-section">
+                    <h3>📋 Indicaciones Generadas</h3>
+                    <div id="result-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Prácticas -->
+        <div id="practicas" class="tab-content">
+            <div class="section">
+                <h2>📋 Gestión de Prácticas</h2>
+                
+                <div class="form-group">
+                    <label>Nombre de la Práctica:</label>
+                    <input type="text" id="practica-nombre" placeholder="Ej: Glucemia en Ayunas">
+                </div>
+                
+                <div class="form-group">
+                    <label>Código:</label>
+                    <input type="text" id="practica-codigo" placeholder="Ej: GLUC001">
+                </div>
+
+                <button class="btn btn-primary" onclick="crearPractica()">
+                    ➕ Crear Práctica
+                </button>
+
+                <button class="btn btn-info" onclick="cargarPracticas()">
+                    🔄 Actualizar Lista
+                </button>
+
+                <div id="practicas-container">
+                    <div class="loading">Cargando prácticas...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Grupos -->
+        <div id="grupos" class="tab-content">
+            <div class="section">
+                <h2>📁 Gestión de Grupos</h2>
+                
+                <div class="form-group">
+                    <label>Nombre del Grupo:</label>
+                    <input type="text" id="grupo-nombre" placeholder="Ej: Ayuno 12 horas">
+                </div>
+                
+                <div class="form-group">
+                    <label>Descripción:</label>
+                    <textarea id="grupo-descripcion" placeholder="Descripción del grupo de indicaciones"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Horas de Ayuno (opcional):</label>
+                    <input type="number" id="grupo-ayuno" min="0" max="24" placeholder="8">
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de Orina (opcional):</label>
+                    <select id="grupo-orina-tipo">
+                        <option value="">Sin recolección de orina</option>
+                        <option value="primera_manana">Primera orina de la mañana</option>
+                        <option value="24_horas">Orina de 24 horas</option>
+                        <option value="aleatoria">Orina aleatoria</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="crearGrupo()">
+                    ➕ Crear Grupo
+                </button>
+
+                <button class="btn btn-info" onclick="cargarGrupos()">
+                    🔄 Actualizar Lista
+                </button>
+
+                <div id="grupos-container">
+                    <div class="loading">Cargando grupos...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Indicaciones -->
+        <div id="indicaciones" class="tab-content">
+            <div class="section">
+                <h2>📝 Gestión de Indicaciones</h2>
+                
+                <div class="form-group">
+                    <label>Descripción Corta:</label>
+                    <input type="text" id="indicacion-descripcion" placeholder="Ej: Ayuno de 8 horas">
+                </div>
+                
+                <div class="form-group">
+                    <label>Instrucción Completa:</label>
+                    <textarea id="indicacion-instruccion" placeholder="Instrucción detallada para el paciente"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de Indicación:</label>
+                    <select id="indicacion-tipo">
+                        <option value="AYUNO">Ayuno</option>
+                        <option value="RECOLECCION">Recolección</option>
+                        <option value="PREPARACION_PREVIA">Preparación Previa</option>
+                        <option value="GENERAL">General</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Área:</label>
+                    <input type="text" id="indicacion-area" placeholder="Ej: Química, Microbiología">
+                </div>
+
+                <button class="btn btn-primary" onclick="crearIndicacion()">
+                    ➕ Crear Indicación
+                </button>
+
+                <button class="btn btn-info" onclick="cargarIndicaciones()">
+                    🔄 Actualizar Lista
+                </button>
+
+                <div id="indicaciones-container">
+                    <div class="loading">Cargando indicaciones...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let practicasData = [];
+        let gruposData = [];
+        let indicacionesData = [];
+
+        // Inicializar aplicación
+        window.onload = function() {
+            cargarPracticasParaSimulador();
+        };
+
+        // Función para mostrar tabs
+        function showTab(tabName) {
+            // Ocultar todos los tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Mostrar tab seleccionado
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Cargar datos según el tab
+            switch(tabName) {
+                case 'simulator':
+                    cargarPracticasParaSimulador();
+                    break;
+                case 'practicas':
+                    cargarPracticas();
+                    break;
+                case 'grupos':
+                    cargarGrupos();
+                    break;
+                case 'indicaciones':
+                    cargarIndicaciones();
+                    break;
+            }
+        }
+
+        // Función para mostrar alertas
+        function showAlert(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            alertDiv.style.position = 'fixed';
+            alertDiv.style.top = '20px';
+            alertDiv.style.right = '20px';
+            alertDiv.style.zIndex = '1000';
+            alertDiv.style.minWidth = '300px';
+            document.body.appendChild(alertDiv);
+
+            // Auto-remover después de 5 segundos
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 5000);
+        }
+
+        // API Helper
+        async function apiCall(endpoint, options = {}) {
+            try {
+                const response = await fetch(`/api${endpoint}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Error en la petición');
+                }
+
+                return data;
+            } catch (error) {
+                console.error('API Error:', error);
+                showAlert(error.message, 'error');
+                throw error;
+            }
+        }
+
+        // FUNCIONES DEL SIMULADOR
+        async function cargarPracticasParaSimulador() {
+            try {
+                const response = await apiCall('/practicas');
+                practicasData = response.data;
+
+                const container = document.getElementById('practicas-list');
+                container.innerHTML = '';
+
+                if (practicasData.length === 0) {
+                    container.innerHTML = '<p>No hay prácticas disponibles. Ve a la pestaña Prácticas para crear algunas.</p>';
+                    return;
+                }
+
+                practicasData.forEach(practica => {
+                    const div = document.createElement('div');
+                    div.className = 'checkbox-item';
+                    div.innerHTML = `
+                        <label>
+                            <input type="checkbox" value="${practica.id}" data-name="${practica.nombre}">
+                            <span><strong>${practica.codigo}</strong> - ${practica.nombre}</span>
+                        </label>
+                    `;
+                    container.appendChild(div);
+                });
+
+            } catch (error) {
+                document.getElementById('practicas-list').innerHTML = '<p>Error cargando prácticas. Verifica que el servidor esté funcionando.</p>';
+            }
+        }
+
+        async function generarIndicaciones() {
+            const checkboxes = document.querySelectorAll('#practicas-list input[type="checkbox"]:checked');
+            
+            if (checkboxes.length === 0) {
+                showAlert('Por favor selecciona al menos una práctica', 'error');
+                return;
+            }
+
+            const practicasIds = Array.from(checkboxes).map(cb => cb.value);
+
+            try {
+                const response = await apiCall('/grupos/generar-indicaciones', {
+                    method: 'POST',
+                    body: JSON.stringify({ practicasIds })
+                });
+
+                const resultContainer = document.getElementById('result-container');
+                const resultContent = document.getElementById('result-content');
+                
+                resultContainer.style.display = 'block';
+                resultContent.innerHTML = '';
+
+                // Mostrar prácticas seleccionadas
+                const practicasDiv = document.createElement('div');
+                practicasDiv.innerHTML = `
+                    <h4>🔬 Prácticas Seleccionadas:</h4>
+                    <div style="margin-bottom: 15px;">
+                        ${response.data.practicas.map(p => `<span class="badge">${p.codigo} - ${p.nombre}</span>`).join('')}
+                    </div>
+                `;
+                resultContent.appendChild(practicasDiv);
+
+                // Mostrar resumen
+                const resumen = response.data.resumen;
+                const resumenDiv = document.createElement('div');
+                resumenDiv.innerHTML = `
+                    <h4>📊 Resumen:</h4>
+                    <p><strong>Ayuno requerido:</strong> ${resumen.ayunoRequerido > 0 ? resumen.ayunoRequerido + ' horas' : 'No requerido'}</p>
+                    <p><strong>Orina requerida:</strong> ${resumen.orinaRequerida ? resumen.orinaRequerida.tipo || 'Sí' : 'No requerida'}</p>
+                    <p><strong>Total de indicaciones:</strong> ${resumen.totalIndicaciones}</p>
+                    <hr style="margin: 15px 0;">
+                `;
+                resultContent.appendChild(resumenDiv);
+
+                // Mostrar indicaciones
+                const indicacionesDiv = document.createElement('div');
+                indicacionesDiv.innerHTML = '<h4>📋 Indicaciones para el Paciente:</h4>';
+                
+                response.data.indicaciones.forEach((ind, index) => {
+                    const indDiv = document.createElement('div');
+                    indDiv.className = 'indicator-item';
+                    indDiv.innerHTML = `
+                        <h4>${index + 1}. ${ind.descripcion}</h4>
+                        <p>${ind.textoInstruccion}</p>
+                        <small style="color: #999;">Tipo: ${ind.tipoIndicacion} | Área: ${ind.area}</small>
+                    `;
+                    indicacionesDiv.appendChild(indDiv);
+                });
+                
+                resultContent.appendChild(indicacionesDiv);
+                showAlert('Indicaciones generadas exitosamente');
+
+            } catch (error) {
+                console.error('Error generando indicaciones:', error);
+            }
+        }
+
+        // FUNCIONES DE PRÁCTICAS
+        async function cargarPracticas() {
+            try {
+                const response = await apiCall('/practicas');
+                const container = document.getElementById('practicas-container');
+                
+                container.innerHTML = '';
+
+                if (response.data.length === 0) {
+                    container.innerHTML = '<p>No hay prácticas registradas</p>';
+                    return;
+                }
+
+                response.data.forEach(practica => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3>
+                            <span class="status-indicator status-${practica.activo ? 'active' : 'inactive'}"></span>
+                            ${practica.nombre}
+                        </h3>
+                        <p><strong>Código:</strong> ${practica.codigo}</p>
+                        <p><strong>Grupos asociados:</strong> ${practica.grupos ? practica.grupos.length : 0}</p>
+                        <small>Creado: ${new Date(practica.fechaCreacion).toLocaleDateString()}</small>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                document.getElementById('practicas-container').innerHTML = '<p>Error cargando prácticas</p>';
+            }
+        }
+
+        async function crearPractica() {
+            const nombre = document.getElementById('practica-nombre').value.trim();
+            const codigo = document.getElementById('practica-codigo').value.trim();
+
+            if (!nombre || !codigo) {
+                showAlert('Por favor completa todos los campos', 'error');
+                return;
+            }
+
+            try {
+                await apiCall('/practicas', {
+                    method: 'POST',
+                    body: JSON.stringify({ nombre, codigo })
+                });
+
+                showAlert('Práctica creada exitosamente');
+                document.getElementById('practica-nombre').value = '';
+                document.getElementById('practica-codigo').value = '';
+                cargarPracticas();
+
+            } catch (error) {
+                console.error('Error creando práctica:', error);
+            }
+        }
+
+        // FUNCIONES DE GRUPOS
+        async function cargarGrupos() {
+            try {
+                const response = await apiCall('/grupos');
+                const container = document.getElementById('grupos-container');
+                
+                container.innerHTML = '';
+
+                if (response.data.length === 0) {
+                    container.innerHTML = '<p>No hay grupos registrados</p>';
+                    return;
+                }
+
+                response.data.forEach(grupo => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3>
+                            <span class="status-indicator status-${grupo.activo ? 'active' : 'inactive'}"></span>
+                            ${grupo.nombre}
+                        </h3>
+                        <p>${grupo.descripcion || 'Sin descripción'}</p>
+                        <p><strong>Ayuno:</strong> ${grupo.ayunoHoras ? grupo.ayunoHoras + ' horas' : 'No requerido'}</p>
+                        <p><strong>Orina:</strong> ${grupo.orinaTipo || 'No requerida'}</p>
+                        <p><strong>Prácticas asociadas:</strong> ${grupo.practicas ? grupo.practicas.length : 0}</p>
+                        <p><strong>Indicaciones:</strong> ${grupo.indicaciones ? grupo.indicaciones.length : 0}</p>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                document.getElementById('grupos-container').innerHTML = '<p>Error cargando grupos</p>';
+            }
+        }
+
+        async function crearGrupo() {
+            const nombre = document.getElementById('grupo-nombre').value.trim();
+            const descripcion = document.getElementById('grupo-descripcion').value.trim();
+            const ayunoHoras = document.getElementById('grupo-ayuno').value;
+            const orinaTipo = document.getElementById('grupo-orina-tipo').value;
+
+            if (!nombre) {
+                showAlert('Por favor ingresa un nombre para el grupo', 'error');
+                return;
+            }
+
+            try {
+                const data = { 
+                    nombre, 
+                    descripcion: descripcion || null,
+                    ayunoHoras: ayunoHoras ? parseInt(ayunoHoras) : null,
+                    orinaTipo: orinaTipo || null
+                };
+
+                await apiCall('/grupos', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                showAlert('Grupo creado exitosamente');
+                document.getElementById('grupo-nombre').value = '';
+                document.getElementById('grupo-descripcion').value = '';
+                document.getElementById('grupo-ayuno').value = '';
+                document.getElementById('grupo-orina-tipo').value = '';
+                cargarGrupos();
+
+            } catch (error) {
+                console.error('Error creando grupo:', error);
+            }
+        }
+
+        // FUNCIONES DE INDICACIONES
+        async function cargarIndicaciones() {
+            try {
+                const response = await apiCall('/indicaciones');
+                const container = document.getElementById('indicaciones-container');
+                
+                container.innerHTML = '';
+
+                if (response.data.length === 0) {
+                    container.innerHTML = '<p>No hay indicaciones registradas</p>';
+                    return;
+                }
+
+                response.data.forEach(indicacion => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3>${indicacion.descripcion}</h3>
+                        <p>${indicacion.textoInstruccion}</p>
+                        <div style="margin-top: 10px;">
+                            <span class="badge">${indicacion.tipoIndicacion}</span>
+                            <span class="badge">${indicacion.area || 'Sin área'}</span>
+                            <span class="badge">${indicacion.estado}</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                document.getElementById('indicaciones-container').innerHTML = '<p>Error cargando indicaciones</p>';
+            }
+        }
+
+        async function crearIndicacion() {
+            const descripcion = document.getElementById('indicacion-descripcion').value.trim();
+            const instruccion = document.getElementById('indicacion-instruccion').value.trim();
+            const tipo = document.getElementById('indicacion-tipo').value;
+            const area = document.getElementById('indicacion-area').value.trim();
+
+            if (!descripcion || !instruccion) {
+                showAlert('Por favor completa la descripción e instrucción', 'error');
+                return;
+            }
+
+            try {
+                const data = {
+                    descripcion,
+                    textoInstruccion: instruccion,
+                    tipoIndicacion: tipo,
+                    area: area || null
+                };
+
+                await apiCall('/indicaciones', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                showAlert('Indicación creada exitosamente');
+                document.getElementById('indicacion-descripcion').value = '';
+                document.getElementById('indicacion-instruccion').value = '';
+                document.getElementById('indicacion-tipo').value = 'GENERAL';
+                document.getElementById('indicacion-area').value = '';
+                cargarIndicaciones();
+
+            } catch (error) {
+                console.error('Error creando indicación:', error);
+            }
+        }
+    </script>
+</body>
+</html>
