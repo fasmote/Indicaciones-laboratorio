@@ -1,498 +1,754 @@
-# 🧪 Sistema de Indicaciones de Laboratorio
+# 🧪 Sistema de Gestión de Indicaciones de Laboratorio
+
+[![Estado](https://img.shields.io/badge/Estado-Funcional-success)](https://github.com)
+[![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)](https://github.com)
+[![Node](https://img.shields.io/badge/Node.js-v18+-green)](https://nodejs.org)
+[![SQLite](https://img.shields.io/badge/SQLite-3.0-lightgrey)](https://sqlite.org)
+
+**Sistema inteligente para la gestión y generación automática de indicaciones de laboratorio**
 
 ![Sistema de Indicaciones](./docs/screenshot-home.png)
 
-Sistema inteligente de gestión de indicaciones para prácticas de laboratorio con detección automática de compatibilidades y optimización de preparación del paciente.
+---
+
+## 📋 Tabla de Contenidos
+
+- [Descripción del Proyecto](#-descripción-del-proyecto)
+- [Características Principales](#-características-principales)
+- [Capturas de Pantalla](#-capturas-de-pantalla)
+- [Arquitectura del Sistema](#-arquitectura-del-sistema)
+- [Instalación Rápida](#-instalación-rápida)
+- [Modelo de Datos](#-modelo-de-datos)
+- [API Endpoints](#-api-endpoints)
+- [Algoritmo de Generación](#-algoritmo-de-generación-de-indicaciones)
+- [Gestión de Base de Datos](#-gestión-de-base-de-datos)
+- [Importación de Datos desde Excel](#-importación-de-datos-desde-excel)
+- [Comandos Útiles](#-comandos-útiles)
+- [Solución de Problemas](#-solución-de-problemas)
+- [Contribuir](#-contribuir)
+
+---
+
+## 🎯 Descripción del Proyecto
+
+Sistema prototipo para la gestión inteligente de indicaciones de laboratorio que permite:
+
+- ✅ **Agrupar indicaciones compatibles** para múltiples prácticas de laboratorio
+- ✅ **Resolver conflictos automáticamente** (ej: determinar ayuno máximo, tipos de orina)
+- ✅ **Aplicar reglas alternativas** para combinaciones específicas de estudios
+- ✅ **Generar indicaciones consolidadas** listas para enviar al paciente por email/WhatsApp
+- ✅ **Gestionar catálogo completo** de prácticas, grupos e indicaciones individuales
+
+### Problema que Resuelve
+
+Los pacientes frecuentemente deben realizarse múltiples estudios de laboratorio en un mismo turno. Cada práctica puede tener diferentes requisitos de preparación (ayuno, recolección de orina, restricciones alimentarias, etc.). Este sistema:
+
+1. **Consolida automáticamente** las indicaciones de múltiples prácticas
+2. **Resuelve conflictos** cuando hay requisitos contradictorios (ej: ayuno de 8h vs 12h → toma el más restrictivo)
+3. **Elimina duplicados** de indicaciones repetidas
+4. **Ordena lógicamente** las instrucciones por prioridad
+5. **Genera un mensaje único** con todas las indicaciones para el paciente
+
+---
+
+## ⭐ Características Principales
+
+### 🔄 Gestión Completa de Entidades
+
+- **Prácticas de Laboratorio**: CRUD completo con códigos únicos y áreas (264+ prácticas disponibles)
+- **Grupos de Indicaciones**: Agrupación inteligente por tipo de preparación
+- **Indicaciones Individuales**: Biblioteca reutilizable de instrucciones
+- **Vinculaciones M:N**: Relaciones flexibles entre prácticas, grupos e indicaciones
+- **Reglas Alternativas**: Casos especiales para combinaciones específicas
+
+### 🎯 Algoritmo Inteligente
+
+- Cálculo automático de ayuno máximo requerido
+- Detección de tipo de recolección de orina necesaria
+- Sistema de prioridades entre indicaciones
+- Eliminación de duplicados
+- Ordenamiento lógico de instrucciones
+
+### 🖥️ Interfaz Web Funcional
+
+- Simulador de generación de indicaciones
+- Panel de gestión de prácticas
+- Panel de gestión de grupos
+- Panel de gestión de indicaciones individuales
+- Cargador masivo de datos desde Excel
+- Visualización clara de resultados
 
 ---
 
 ## 📸 Capturas de Pantalla
 
-### Simulador de Indicaciones
+### Pantalla Principal - Simulador de Indicaciones
 ![Simulador](./docs/screenshot-simulador.png)
 
-*Interfaz principal donde se seleccionan las prácticas y se generan las indicaciones optimizadas*
+*Selecciona múltiples prácticas y genera automáticamente las indicaciones consolidadas*
 
 ### Gestión de Prácticas
 ![Prácticas](./docs/screenshot-practicas.png)
 
-*Catálogo completo de prácticas de laboratorio organizadas por código y nombre*
+*Administra el catálogo completo de prácticas de laboratorio organizadas por código y nombre*
 
-### Cargador de Datos
+### Cargador de Datos Masivo
 ![Cargador](./docs/screenshot-cargador.png)
 
-*Herramienta para importar masivamente prácticas desde archivos Excel*
+*Importa masivamente prácticas desde archivos Excel con procesamiento inteligente*
 
 ---
 
-## 🎯 Características Principales
+## 🏗️ Arquitectura del Sistema
 
-- �?**Gestión de Prácticas**: Catálogo completo de 264+ prácticas de laboratorio
-- 📋 **Grupos de Compatibilidad**: Agrupación automática por requisitos similares
-- 📝 **Indicaciones Optimizadas**: Generación inteligente de instrucciones para pacientes
-- 🔄 **Compatibilidad Automática**: Detección de prácticas que pueden realizarse juntas
-- 📊 **Importación de Datos**: Carga masiva desde archivos Excel
-- 🎨 **Interfaz Amigable**: Sistema web moderno y responsive
-- 🧬 **Grupos Alternativos**: Manejo de casos especiales con reglas de compatibilidad
-
----
-
-## 🏗�?Arquitectura del Sistema
-
-### Flujo de Trabajo
-
-```mermaid
-graph LR
-    A[Usuario selecciona prácticas] --> B[Sistema analiza requisitos]
-    B --> C[Agrupa por compatibilidad]
-    C --> D[Genera indicaciones optimizadas]
-    D --> E[Muestra instrucciones al paciente]
-```
-
-### Grupos de Compatibilidad
-
-El sistema organiza las prácticas en grupos según:
-
-1. **Requisitos de Ayuno**: 
-   - Sin ayuno
-   - 3 horas
-   - 4 horas
-   - 8 horas
-   - 12 horas
-
-2. **Recolección de Orina**: 
-   - Primera orina de la mañana
-   - Orina de 2 horas
-   - Orina de 12 horas
-   - Orina de 24 horas
-
-3. **Tipo de Muestra**: 
-   - Sangre
-   - Orina
-   - Materia fecal
-   - Saliva
-   - Otros fluidos
-
-4. **Área de Laboratorio**: 
-   - Química
-   - Bacteriología
-   - Virología
-   - Endocrinología
-   - Hematología/Hemostasia
-   - Inmunología
-
-### Modelo de Base de Datos
+### Stack Tecnológico
 
 ```
-┌─────────────�?�? PRACTICA   �?└──────┬──────�?       �?       ├──────> ┌──────────────────�?     ┌────────�?       �?       �?PRACTICA_GRUPO   │─────>�?GRUPO  �?       �?       └──────────────────�?     └───┬────�?       �?                                      �?       �?       ┌──────────────────�?     ┌───▼────────�?       �?       �?GRUPO_INDICACION │─────>�?INDICACION �?       �?       └──────────────────�?     └────────────�?       �?       └──────> ┌──────────────────────�?                �?GRUPOS_ALTERNATIVOS  �?                └──────────────────────�?```
+┌─────────────────────────────────────────┐
+│         Frontend (Vanilla JS)          │
+│  HTML5 + CSS3 + JavaScript + Fetch API  │
+└──────────────┬──────────────────────────┘
+               │ HTTP/REST
+┌──────────────▼──────────────────────────┐
+│       Backend (Node.js + Express)       │
+│    Controllers + Routes + Middleware    │
+└──────────────┬──────────────────────────┘
+               │ Prisma ORM
+┌──────────────▼──────────────────────────┐
+│      Base de Datos (SQLite)             │
+│  Prácticas, Grupos, Indicaciones, etc.  │
+└─────────────────────────────────────────┘
+```
+
+### Componentes Principales
+
+| Componente | Tecnología | Propósito |
+|------------|------------|-----------|
+| **Backend** | Node.js + Express.js | API REST y lógica de negocio |
+| **ORM** | Prisma 5.7+ | Modelado y acceso a datos |
+| **Base de Datos** | SQLite 3.0 | Almacenamiento persistente |
+| **Frontend** | HTML5 + Vanilla JS | Interfaz de usuario |
+| **Estilos** | CSS3 | Diseño visual responsive |
+| **Procesamiento** | xlsx | Importación de archivos Excel |
+
+### Estructura de Directorios
+
+```
+indicaciones-app/
+├── 📁 prisma/
+│   ├── schema.prisma          # ✅ Esquema de base de datos
+│   ├── migrations/            # ✅ Historial de migraciones
+│   └── indicaciones.db        # ✅ Base de datos SQLite
+├── 📁 public/
+│   ├── index.html            # ✅ Interfaz web principal
+│   ├── cargador.html         # ✅ Cargador de datos
+│   └── styles.css            # ✅ Estilos CSS
+├── 📁 src/
+│   ├── 📁 controllers/
+│   │   ├── practicasController.js     # Lógica de prácticas
+│   │   ├── gruposController.js        # Lógica de grupos
+│   │   └── indicacionesController.js  # Lógica de indicaciones
+│   ├── 📁 routes/
+│   │   ├── practicas.js      # Rutas de prácticas
+│   │   ├── grupos.js         # Rutas de grupos
+│   │   └── indicaciones.js   # Rutas de indicaciones
+│   ├── 📁 database/
+│   │   ├── prisma.js         # Cliente Prisma
+│   │   └── seed.js           # Datos de prueba
+│   └── server.js             # ✅ Servidor Express
+├── 📁 docs/
+│   ├── screenshot-home.png
+│   ├── screenshot-simulador.png
+│   └── screenshot-cargador.png
+├── 📁 backups/                # Carpeta para backups (crear)
+├── 📄 package.json           # Dependencias del proyecto
+├── 📄 install.bat            # Script de instalación Windows
+├── 📄 diagnostico.bat        # Script de diagnóstico
+├── 📄 backup-db.bat          # Script de backup automático
+├── 📄 restore-db.bat         # Script de restauración
+└── 📄 README.md              # Este archivo
+```
 
 ---
 
-## 🚀 Instalación
+## 🚀 Instalación Rápida
 
-### Requisitos Previos
+### Prerequisitos
 
-- **Node.js** 18 o superior
-- **npm** o **yarn**
-- **Git**
+- **Node.js** v18 o superior ([Descargar](https://nodejs.org/))
+- **npm** (incluido con Node.js)
+- **Git** (opcional, para clonar el repositorio)
 
-### Instalación Paso a Paso
+### Opción 1: Instalación Automática (Windows)
+
+```batch
+# Ejecutar el script de instalación automática
+install.bat
+```
+
+El script realizará:
+1. ✅ Verificación de Node.js y npm
+2. ✅ Instalación de dependencias
+3. ✅ Generación del cliente Prisma
+4. ✅ Ejecución de migraciones
+5. ✅ Carga de datos de prueba
+6. ✅ Inicio del servidor
+
+### Opción 2: Instalación Manual
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/TU_USUARIO/indicaciones-laboratorio.git
-cd indicaciones-laboratorio
+# 1. Clonar o navegar a la carpeta del proyecto
+cd indicaciones-app
 
 # 2. Instalar dependencias
 npm install
 
-# 3. Generar cliente de Prisma
+# 3. Generar cliente Prisma
 npm run db:generate
 
-# 4. (Opcional) Ejecutar migraciones
+# 4. Ejecutar migraciones de base de datos
 npm run db:migrate
 
-# 5. Iniciar el servidor
-npm start
+# 5. Cargar datos de prueba (opcional)
+npm run db:seed
+
+# 6. Iniciar el servidor
+npm run dev
 ```
 
-El sistema estará disponible en: **http://localhost:3000**
+### Verificación de Instalación
 
----
+```bash
+# Abrir navegador en:
+http://localhost:3000
 
-## 📦 Scripts Disponibles
-
-| Script | Descripción |
-|--------|-------------|
-| `npm start` | Inicia el servidor en modo producción |
-| `npm run dev` | Inicia el servidor con hot-reload |
-| `npm run db:migrate` | Ejecuta migraciones de base de datos |
-| `npm run db:generate` | Genera el cliente de Prisma |
-| `npm run db:studio` | Abre Prisma Studio (GUI para la BD) |
-| `npm run db:seed` | Carga datos de ejemplo |
-
----
-
-## 🔧 Configuración
-
-### Variables de Entorno
-
-Crea un archivo `.env` en la raíz del proyecto:
-
-```env
-PORT=3000
-NODE_ENV=development
-DATABASE_URL="file:./prisma/indicaciones.db"
-```
-
-### Estructura de Datos Excel
-
-Para importar prácticas desde Excel, el archivo debe tener las siguientes columnas:
-
-| Columna | Descripción | Ejemplo |
-|---------|-------------|---------|
-| `codigo` | Código único de la práctica | `69586` |
-| `nombre` | Nombre descriptivo | `ACTH` |
-| `area` | Área del laboratorio | `ENDOCRINO` |
-| `ayuno_horas` | Horas de ayuno requeridas | `8` |
-| `orina_tipo` | Tipo de recolección | `ORINA_24H` |
-
----
-
-## 📊 Uso del Sistema
-
-### 1. Cargar Datos desde Excel
-
-1. Accede a **http://localhost:3000/cargador**
-2. Haz clic en **"Seleccionar archivo Excel"**
-3. Selecciona tu archivo con las prácticas
-4. Haz clic en **"Cargar Datos"**
-5. El sistema procesará y creará automáticamente:
-   - �?Prácticas
-   - �?Grupos de compatibilidad
-   - �?Indicaciones por grupo
-   - �?Relaciones entre prácticas y grupos
-
-### 2. Generar Indicaciones para un Paciente
-
-1. Accede a **http://localhost:3000**
-2. En el **Simulador**, selecciona las prácticas que necesita el paciente
-3. Haz clic en **"Generar Indicaciones"**
-4. El sistema mostrará:
-   - �?Indicaciones optimizadas (sin redundancias)
-   - �?Requisitos de ayuno consolidados
-   - �?Instrucciones de recolección de muestras
-   - �?Grupos utilizados para la generación
-
-### 3. Gestionar Prácticas
-
-1. Ve a la pestaña **"Prácticas"**
-2. Puedes:
-   - Ver todas las prácticas disponibles
-   - Buscar por código o nombre
-   - Ver detalles de cada práctica
-   - Editar información (requiere permisos)
-
-### 4. Ver Grupos y Configuración
-
-1. Ve a la pestaña **"Grupos"**
-2. Explora los grupos de compatibilidad
-3. Revisa qué prácticas pertenecen a cada grupo
-
----
-
-## 🗂�?Estructura del Proyecto
-
-```
-indicaciones-app/
-├── docs/                      # Documentación y capturas
-�?  ├── screenshot-home.png
-�?  ├── screenshot-simulador.png
-�?  └── screenshot-cargador.png
-├── prisma/
-�?  ├── schema.prisma          # Esquema de base de datos
-�?  ├── migrations/            # Historial de migraciones
-�?  └── indicaciones.db        # Base de datos SQLite
-├── src/
-�?  ├── database/
-�?  �?  └── prisma.js          # Cliente Prisma
-�?  ├── routes/
-�?  �?  ├── practicas.js       # API de prácticas
-�?  �?  ├── grupos.js          # API de grupos
-�?  �?  └── indicaciones.js    # API de indicaciones
-�?  └── server.js              # Servidor Express
-├── public/
-�?  ├── index.html             # Interfaz principal
-�?  ├── cargador.html          # Cargador de datos
-�?  └── styles.css             # Estilos
-├── datos_reales_import.sql    # Datos de ejemplo
-├── .gitignore                 # Archivos ignorados por Git
-├── package.json               # Dependencias del proyecto
-└── README.md                  # Este archivo
+# O verificar el estado del sistema:
+http://localhost:3000/api/health
 ```
 
 ---
 
-## 🛠�?Stack Tecnológico
+## 📊 Modelo de Datos
 
-### Backend
-- **Node.js** v18+
-- **Express.js** v4.18 - Framework web
-- **Prisma ORM** v5.7 - ORM moderno para Node.js
-- **SQLite** - Base de datos embebida
+### Diagrama Entidad-Relación
 
-### Frontend
-- **HTML5** + **CSS3** + **JavaScript Vanilla**
-- **Responsive Design** - Compatible con todos los dispositivos
+```
+┌─────────────┐         ┌─────────────┐         ┌─────────────┐
+│  PRACTICA   │────N────│ PRACTICA_   │────N────│    GRUPO    │
+│             │         │   GRUPO     │         │             │
+│ id_practica │         │             │         │  id_grupo   │
+│ nombre      │         │ id_practica │         │  nombre     │
+│ codigo      │         │ id_grupo    │         │  ayuno_horas│
+│ activo      │         │ activo      │         │  orina_horas│
+└─────────────┘         └─────────────┘         │  orina_tipo │
+                                                 └──────┬──────┘
+                                                        │
+                                                    ┌───▼──────┐
+                        ┌─────────────┐         ┌──│  GRUPO_  │
+                        │ INDICACION  │────N────│  │INDICACION│
+                        │             │         └──│          │
+                        │id_indicacion│            │ id_grupo │
+                        │descripcion  │            │id_indica │
+                        │texto_instruc│            │ orden    │
+                        │tipo         │            └──────────┘
+                        │area         │
+                        │id_indica_inf│◄───┐
+                        └─────────────┘    │ (prioridad)
+                                           └──┘
 
-### Librerías
-- **xlsx** v0.18 - Procesamiento de archivos Excel
-- **cors** - Manejo de CORS
-- **helmet** - Seguridad HTTP
-- **morgan** - Logger de requests
+                        ┌──────────────────┐
+                        │ GRUPOS_          │
+                        │ ALTERNATIVOS     │
+                        │                  │
+                        │ id_grupo_cond_1  │──┐
+                        │ id_grupo_cond_2  │  ├─► GRUPO
+                        │ id_grupo_result  │──┘
+                        └──────────────────┘
+```
+
+### Entidades Principales
+
+#### 🧪 PRACTICA
+
+```sql
+CREATE TABLE Practica (
+  id_practica INTEGER PRIMARY KEY AUTOINCREMENT,
+  nombre TEXT NOT NULL,
+  codigo TEXT UNIQUE NOT NULL,
+  activo BOOLEAN DEFAULT TRUE,
+  fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 📁 GRUPO
+
+```sql
+CREATE TABLE Grupo (
+  id_grupo INTEGER PRIMARY KEY AUTOINCREMENT,
+  nombre TEXT NOT NULL,
+  descripcion TEXT,
+  ayuno_horas INTEGER,
+  orina_horas INTEGER,
+  orina_tipo TEXT,
+  activo BOOLEAN DEFAULT TRUE,
+  fecha_alta TIMESTAMP,
+  fecha_baja TIMESTAMP,
+  fecha_ultima_modificacion TIMESTAMP
+);
+```
+
+#### 📝 INDICACION
+
+```sql
+CREATE TABLE Indicacion (
+  id_indicacion INTEGER PRIMARY KEY AUTOINCREMENT,
+  descripcion TEXT NOT NULL,
+  texto_instruccion TEXT NOT NULL,
+  tipo_indicacion TEXT,
+  area TEXT,
+  estado TEXT DEFAULT 'ACTIVO',
+  id_indicacion_inferior INTEGER,
+  FOREIGN KEY (id_indicacion_inferior) REFERENCES Indicacion(id_indicacion)
+);
+```
 
 ---
 
-## 📋 API Endpoints
+## 🌐 API Endpoints
 
-### Prácticas
+### Base URL: `http://localhost:3000/api`
 
-```http
-GET    /api/practicas           # Listar todas las prácticas
-GET    /api/practicas/:id       # Obtener práctica específica
-POST   /api/practicas           # Crear nueva práctica
-PUT    /api/practicas/:id       # Actualizar práctica
-DELETE /api/practicas/:id       # Eliminar práctica
+### 🧪 Prácticas
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `GET` | `/practicas` | Listar todas |
+| `GET` | `/practicas/:id` | Obtener específica |
+| `POST` | `/practicas` | Crear nueva |
+| `PUT` | `/practicas/:id` | Actualizar |
+| `DELETE` | `/practicas/:id` | Eliminar |
+
+### 📁 Grupos
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `GET` | `/grupos` | Listar todos |
+| `POST` | `/grupos/generar-indicaciones` | **🎯 Generar indicaciones** |
+
+### 🔧 Sistema
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| `GET` | `/health` | Estado del sistema |
+| `GET` | `/debug/count` | Conteo de registros |
+
+---
+
+## 💾 Gestión de Base de Datos
+
+### Comandos Básicos
+
+```bash
+# Ver datos en interfaz visual
+npm run db:studio
+
+# Generar cliente Prisma
+npm run db:generate
+
+# Ejecutar migraciones
+npm run db:migrate
+
+# Cargar datos de prueba
+npm run db:seed
 ```
 
-### Grupos
+### 📤 Exportar Base de Datos
 
-```http
-GET    /api/grupos              # Listar todos los grupos
-GET    /api/grupos/:id          # Obtener grupo con sus prácticas e indicaciones
-POST   /api/grupos              # Crear nuevo grupo
-PUT    /api/grupos/:id          # Actualizar grupo
-DELETE /api/grupos/:id          # Eliminar grupo
+#### Método 1: Copiar archivo (Recomendado)
+
+```bash
+# Windows
+copy "prisma\indicaciones.db" "backups\backup_2025-01-15.db"
+
+# Linux/Mac
+cp prisma/indicaciones.db backups/backup_$(date +%Y%m%d).db
 ```
 
-### Indicaciones
+#### Método 2: Exportar a SQL
 
-```http
-GET    /api/indicaciones                # Listar todas las indicaciones
-GET    /api/indicaciones/:id            # Obtener indicación específica
-POST   /api/indicaciones/generar        # Generar indicaciones optimizadas
+```bash
+# Exportar todo
+sqlite3 prisma/indicaciones.db .dump > backups/database.sql
+
+# Exportar tabla específica
+sqlite3 prisma/indicaciones.db "SELECT * FROM Practica;" > backups/practicas.csv
 ```
 
-**Ejemplo de request para generar indicaciones:**
+### 📥 Restaurar Base de Datos
+
+```bash
+# Restaurar desde archivo SQLite
+copy "backups\backup_2025-01-15.db" "prisma\indicaciones.db"
+
+# Restaurar desde SQL
+sqlite3 prisma/indicaciones.db < backups/database.sql
+```
+
+### 📤 Subir Base de Datos a Servidor
+
+#### Opción 1: Usar SCP (Servidor Linux)
+
+```bash
+# Subir archivo
+scp prisma/indicaciones.db usuario@servidor.com:/ruta/destino/
+
+# Descargar archivo
+scp usuario@servidor.com:/ruta/indicaciones.db prisma/
+```
+
+#### Opción 2: Usar FTP/SFTP
+
+```bash
+# Conectar por SFTP
+sftp usuario@servidor.com
+
+# Subir archivo
+put prisma/indicaciones.db /ruta/destino/
+
+# Descargar archivo
+get /ruta/indicaciones.db prisma/
+```
+
+#### Opción 3: Usar Cliente FTP (Filezilla, WinSCP)
+
+1. Conectarse al servidor FTP/SFTP
+2. Navegar a la carpeta local: `prisma/`
+3. Navegar a la carpeta remota: `/var/www/indicaciones/prisma/`
+4. Arrastrar el archivo `indicaciones.db` al servidor
+5. Verificar permisos: `chmod 644 indicaciones.db`
+
+#### Opción 4: Exportar a SQL y subir por Git (solo backups pequeños)
+
+```bash
+# Exportar a SQL
+sqlite3 prisma/indicaciones.db .dump > backups/database.sql
+
+# Agregar a Git
+git add backups/database.sql
+git commit -m "Backup de base de datos"
+git push origin main
+```
+
+⚠️ **IMPORTANTE:** No subir bases de datos con información sensible de pacientes a repositorios públicos.
+
+#### Opción 5: Usar servicios en la nube
+
+**Google Drive:**
+```bash
+# Instalar rclone
+# Windows: https://rclone.org/downloads/
+# Linux: curl https://rclone.org/install.sh | sudo bash
+
+# Configurar Google Drive
+rclone config
+
+# Subir archivo
+rclone copy prisma/indicaciones.db gdrive:backups/
+```
+
+**Dropbox:**
+```bash
+# Subir con Dropbox Uploader
+./dropbox_uploader.sh upload prisma/indicaciones.db /backups/
+```
+
+---
+
+## 📥 Importación de Datos desde Excel
+
+### Estructura del Archivo Excel
+
+El archivo Excel debe tener las siguientes columnas:
+
+| Columna | Tipo | Descripción | Ejemplo |
+|---------|------|-------------|---------|
+| `codigo` | Texto | Código único de la práctica | `69586` |
+| `nombre` | Texto | Nombre de la práctica | `ACTH` |
+| `area` | Texto | Área del laboratorio | `ENDOCRINO` |
+| `ayuno` | Texto | Requisitos de ayuno | `8 HORAS` |
+| `orina` | Texto | Tipo de recolección | `PRIMERA ORINA` |
+| `indicaciones` | Texto | Instrucciones completas | `Ayuno de 8 horas...` |
+
+### Proceso de Importación
+
+1. **Preparar el archivo Excel:**
+   - Asegurarse que tenga los encabezados correctos
+   - Verificar que no haya celdas vacías en columnas críticas
+   - Guardar como `.xlsx`
+
+2. **Acceder al cargador:**
+   ```
+   http://localhost:3000/cargador.html
+   ```
+
+3. **Seleccionar y cargar:**
+   - Clic en "Seleccionar archivo Excel"
+   - Elegir el archivo
+   - Clic en "Cargar Datos"
+
+4. **Verificar resultados:**
+   - El sistema mostrará prácticas procesadas
+   - Grupos creados automáticamente
+   - Indicaciones generadas
+
+### Script de Importación Manual
+
+Si prefieres importar programáticamente:
 
 ```javascript
-POST /api/indicaciones/generar
-Content-Type: application/json
+const XLSX = require('xlsx');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-{
-  "practicasIds": [69586, 69613, 69424]
-}
-```
-
-**Respuesta:**
-
-```json
-{
-  "success": true,
-  "data": {
-    "indicacionesOptimizadas": "INDICACIONES PARA EL PACIENTE:\n\n1. Ayuno de 8 horas...",
-    "gruposUtilizados": [
-      {
-        "id_grupo": 7,
-        "nombre": "ENDOCRINO_AYUNO8H",
-        "ayuno_horas": 8,
-        "practicas_count": 2
+async function importarExcel(rutaArchivo) {
+  const workbook = XLSX.readFile(rutaArchivo);
+  const sheet = workbook.Sheets[workbook.SheetNames[0]];
+  const data = XLSX.utils.sheet_to_json(sheet);
+  
+  for (const row of data) {
+    await prisma.practica.create({
+      data: {
+        nombre: row.nombre,
+        codigo: row.codigo,
+        activo: true
       }
-    ],
-    "detalles": {
-      "totalPracticas": 3,
-      "totalGrupos": 2,
-      "ayunoMaximo": 8,
-      "requiereOrina": true
-    }
+    });
   }
+  
+  console.log(`✅ Importadas ${data.length} prácticas`);
 }
-```
 
-### Sistema
-
-```http
-GET    /api/health              # Estado del sistema
-GET    /api/debug/count         # Contadores de registros en BD
+importarExcel('datos.xlsx');
 ```
 
 ---
 
-## 🧪 Casos de Uso
+## 🛠️ Comandos Útiles
 
-### Ejemplo 1: Paciente con estudios endocrinos
+### Desarrollo
 
-**Prácticas solicitadas:**
-- ACTH (69586)
-- Insulina (69613)
-- Cortisol (70274)
+```bash
+# Iniciar servidor con auto-reload
+npm run dev
 
-**Resultado:**
-El sistema detecta que todas requieren:
-- �?Ayuno de 8 horas
-- �?Extracción entre 7:00 y 8:30 AM
-- �?Evitar estrés antes de la extracción
+# Iniciar en modo producción
+npm start
 
-**Indicaciones generadas:**
-```
-PREPARACIÓN PARA SUS ESTUDIOS:
-
-1. Ayuno de 8 horas antes del estudio
-2. Concurrir al laboratorio entre las 7:00 y 8:30 hs
-3. Evitar situaciones de estrés antes de la extracción
-4. No realizar actividad física intensa
-5. Informar toda medicación al extraccionista
+# Ver logs del servidor
+npm run dev | tee logs/server.log
 ```
 
-### Ejemplo 2: Estudios de orina
+### Base de Datos
 
-**Prácticas solicitadas:**
-- Urocultivo (69455)
-- Orina completa (69424)
-- Calcio en orina 24hs (69254)
+```bash
+# Ver datos visualmente
+npm run db:studio
 
-**Resultado:**
-El sistema optimiza las indicaciones:
-- �?Agrupa las dos primeras (primera orina)
-- �?Separa la recolección de 24 horas
-- �?Evita redundancias en las instrucciones
+# Crear nueva migración
+npm run db:migrate
+
+# Resetear DB (⚠️ borra todo)
+npm run db:reset
+
+# Cargar datos de ejemplo
+npm run db:seed
+```
+
+### Mantenimiento
+
+```bash
+# Verificar estado del sistema
+curl http://localhost:3000/api/health
+
+# Contar registros
+curl http://localhost:3000/api/debug/count
+
+# Ver logs de errores
+tail -f logs/error.log
+```
+
+### Scripts Batch (Windows)
+
+```batch
+# Instalación completa
+install.bat
+
+# Diagnóstico del sistema
+diagnostico.bat
+
+# Backup de base de datos
+backup-db.bat
+
+# Restaurar desde backup
+restore-db.bat backups\backup_20250115.db
+```
+
+---
+
+## 🔧 Solución de Problemas
+
+### Problema: "No se pueden cargar las prácticas"
+
+**Causa:** Base de datos vacía
+
+**Solución:**
+```bash
+npm run db:seed
+```
+
+### Problema: "Puerto 3000 ya en uso"
+
+**Causa:** Otra aplicación usa el puerto
+
+**Solución 1 - Cambiar puerto:**
+```bash
+# Windows
+set PORT=3001 && npm start
+
+# Linux/Mac
+PORT=3001 npm start
+```
+
+**Solución 2 - Liberar puerto:**
+```bash
+# Windows
+netstat -ano | findstr :3000
+taskkill /PID <PID> /F
+
+# Linux/Mac
+lsof -ti:3000 | xargs kill -9
+```
+
+### Problema: "Error de Prisma"
+
+**Causa:** Cliente Prisma desactualizado
+
+**Solución:**
+```bash
+npm run db:generate
+npm run db:migrate
+```
+
+### Problema: "Cannot find module 'xyz'"
+
+**Causa:** Dependencias no instaladas
+
+**Solución:**
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Problema: Base de datos corrupta
+
+**Causa:** Cierre abrupto del servidor
+
+**Solución:**
+```bash
+# Restaurar desde backup
+copy "backups\ultimo_backup.db" "prisma\indicaciones.db"
+
+# O recrear desde cero
+npm run db:reset
+npm run db:seed
+```
 
 ---
 
 ## 🤝 Contribuir
 
-¡Las contribuciones son bienvenidas! Para contribuir:
+### Cómo Contribuir
 
 1. **Fork** el proyecto
-2. Crea una **rama** para tu feature:
-   ```bash
-   git checkout -b feature/MiNuevaCaracteristica
-   ```
-3. **Commit** tus cambios:
-   ```bash
-   git commit -m 'Agregar nueva característica increíble'
-   ```
-4. **Push** a la rama:
-   ```bash
-   git push origin feature/MiNuevaCaracteristica
-   ```
-5. Abre un **Pull Request**
+2. Crear rama: `git checkout -b feature/nueva-caracteristica`
+3. Commit cambios: `git commit -m 'Agregar nueva característica'`
+4. Push: `git push origin feature/nueva-caracteristica`
+5. Abrir **Pull Request**
 
-### Guía de Estilo
+### Guías de Desarrollo
 
-- Usa nombres descriptivos para variables y funciones
-- Comenta código complejo
-- Sigue las convenciones de ES6+
-- Escribe mensajes de commit claros
+- Usar nombres descriptivos para variables
+- Comentar código complejo
+- Seguir convenciones ES6+
+- Escribir mensajes de commit claros
+- Probar antes de hacer commit
 
----
+### Reportar Bugs
 
-## 🐛 Reportar Issues
-
-Si encuentras un bug o tienes una sugerencia:
-
-1. Ve a la sección de [Issues](https://github.com/TU_USUARIO/indicaciones-laboratorio/issues)
-2. Busca si ya existe un issue similar
-3. Si no existe, crea uno nuevo con:
-   - 📝 Descripción clara del problema
-   - 🔄 Pasos para reproducirlo
-   - 💻 Información del entorno (SO, versión de Node, etc.)
-   - 📸 Capturas de pantalla si es posible
+Crear un issue con:
+- 📝 Descripción clara del problema
+- 🔄 Pasos para reproducirlo
+- 💻 Información del entorno
+- 📸 Capturas de pantalla
 
 ---
 
 ## 📝 Licencia
 
-Este proyecto está bajo la **Licencia MIT**. Ver archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está bajo la **Licencia MIT**.
 
 ```
 MIT License
 
-Copyright (c) 2025 Claude/Claudio
+Copyright (c) 2025
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software")...
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software...
 ```
 
 ---
 
-## 👥 Autores
+## 🗺️ Roadmap
 
-- **Equipo Claude/Claudio** - *Desarrollo y diseño* - 2025
-- **RED de Laboratorios** - *Provisión de datos y requisitos*
+### v1.0 (Actual) ✅
+- Sistema básico de gestión de prácticas
+- Generación de indicaciones optimizadas
+- Importación desde Excel
+- Interfaz web responsive
 
----
+### v1.1 (Próximo) 🔄
+- Sistema de usuarios y permisos
+- Historial de indicaciones generadas
+- Exportación de indicaciones a PDF
+- API REST completa con autenticación
 
-## 🙏 Agradecimientos
-
-- 🏥 **RED de Laboratorios** por proporcionar los datos de prácticas e indicaciones
-- 💻 **Comunidad Open Source** por las herramientas utilizadas
-- 👨‍⚕�?**Profesionales de laboratorio** por la validación de las indicaciones
-- 🎨 **Diseñadores** que inspiraron la interfaz
-
----
-
-## 📞 Soporte y Contacto
-
-¿Necesitas ayuda? Tienes varias opciones:
-
-- 📧 **Email**: soporte@Claude/Claudio.gob.ar
-- 🐛 **Issues**: [GitHub Issues](https://github.com/TU_USUARIO/indicaciones-laboratorio/issues)
-- 📖 **Documentación**: [Wiki del proyecto](https://github.com/TU_USUARIO/indicaciones-laboratorio/wiki)
-- 💬 **Discusiones**: [GitHub Discussions](https://github.com/TU_USUARIO/indicaciones-laboratorio/discussions)
+### v2.0 (Futuro) 📅
+- Integración con sistemas hospitalarios
+- App móvil (iOS/Android)
+- Notificaciones automáticas a pacientes
+- Dashboard de estadísticas
 
 ---
 
-## 🗺�?Roadmap
+## 📞 Soporte
 
-### v1.0 (Actual)
-- �?Sistema básico de gestión de prácticas
-- �?Generación de indicaciones optimizadas
-- �?Importación desde Excel
-- �?Interfaz web responsive
+¿Necesitas ayuda?
 
-### v1.1 (Próximo)
-- 🔄 Sistema de usuarios y permisos
-- 🔄 Historial de indicaciones generadas
-- 🔄 Exportación de indicaciones a PDF
-- 🔄 API REST completa con autenticación
-
-### v2.0 (Futuro)
-- �?Integración con sistemas hospitalarios
-- �?App móvil (iOS/Android)
-- �?Notificaciones automáticas a pacientes
-- �?Dashboard de estadísticas y reportes
-
----
-
-## 📊 Estadísticas del Proyecto
-
-![GitHub stars](https://img.shields.io/github/stars/TU_USUARIO/indicaciones-laboratorio?style=social)
-![GitHub forks](https://img.shields.io/github/forks/TU_USUARIO/indicaciones-laboratorio?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/TU_USUARIO/indicaciones-laboratorio?style=social)
-
-![GitHub issues](https://img.shields.io/github/issues/TU_USUARIO/indicaciones-laboratorio)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/TU_USUARIO/indicaciones-laboratorio)
-![GitHub last commit](https://img.shields.io/github/last-commit/TU_USUARIO/indicaciones-laboratorio)
+- 🐛 **Issues**: Reportar bugs en GitHub
+- 📖 **Documentación**: Ver wiki del proyecto
+- 💬 **Discusiones**: Participar en foros
 
 ---
 
 <div align="center">
 
-### �?Si este proyecto te resulta útil, considera darle una estrella en GitHub
+### ⭐ Si este proyecto te resulta útil, considera darle una estrella
 
-**Hecho con ❤️ por el equipo Claude/Claudio**
+**Hecho con ❤️ para la comunidad de laboratorios clínicos**
 
-[⬆️ Volver arriba](#-sistema-de-indicaciones-de-laboratorio)
+[⬆️ Volver arriba](#-sistema-de-gestión-de-indicaciones-de-laboratorio)
 
 </div>
