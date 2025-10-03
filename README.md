@@ -27,7 +27,7 @@ Sistema inteligente de gestión de indicaciones para prácticas de laboratorio c
 
 ## 🎯 Características Principales
 
-- ✅ **Gestión de Prácticas**: Catálogo completo de 264+ prácticas de laboratorio
+- �?**Gestión de Prácticas**: Catálogo completo de 264+ prácticas de laboratorio
 - 📋 **Grupos de Compatibilidad**: Agrupación automática por requisitos similares
 - 📝 **Indicaciones Optimizadas**: Generación inteligente de instrucciones para pacientes
 - 🔄 **Compatibilidad Automática**: Detección de prácticas que pueden realizarse juntas
@@ -37,7 +37,7 @@ Sistema inteligente de gestión de indicaciones para prácticas de laboratorio c
 
 ---
 
-## 🏗️ Arquitectura del Sistema
+## 🏗�?Arquitectura del Sistema
 
 ### Flujo de Trabajo
 
@@ -84,22 +84,7 @@ El sistema organiza las prácticas en grupos según:
 ### Modelo de Base de Datos
 
 ```
-┌─────────────┐
-│  PRACTICA   │
-└──────┬──────┘
-       │
-       ├──────> ┌──────────────────┐      ┌────────┐
-       │        │ PRACTICA_GRUPO   │─────>│ GRUPO  │
-       │        └──────────────────┘      └───┬────┘
-       │                                       │
-       │        ┌──────────────────┐      ┌───▼────────┐
-       │        │ GRUPO_INDICACION │─────>│ INDICACION │
-       │        └──────────────────┘      └────────────┘
-       │
-       └──────> ┌──────────────────────┐
-                │ GRUPOS_ALTERNATIVOS  │
-                └──────────────────────┘
-```
+┌─────────────�?�? PRACTICA   �?└──────┬──────�?       �?       ├──────> ┌──────────────────�?     ┌────────�?       �?       �?PRACTICA_GRUPO   │─────>�?GRUPO  �?       �?       └──────────────────�?     └───┬────�?       �?                                      �?       �?       ┌──────────────────�?     ┌───▼────────�?       �?       �?GRUPO_INDICACION │─────>�?INDICACION �?       �?       └──────────────────�?     └────────────�?       �?       └──────> ┌──────────────────────�?                �?GRUPOS_ALTERNATIVOS  �?                └──────────────────────�?```
 
 ---
 
@@ -183,10 +168,10 @@ Para importar prácticas desde Excel, el archivo debe tener las siguientes colum
 3. Selecciona tu archivo con las prácticas
 4. Haz clic en **"Cargar Datos"**
 5. El sistema procesará y creará automáticamente:
-   - ✅ Prácticas
-   - ✅ Grupos de compatibilidad
-   - ✅ Indicaciones por grupo
-   - ✅ Relaciones entre prácticas y grupos
+   - �?Prácticas
+   - �?Grupos de compatibilidad
+   - �?Indicaciones por grupo
+   - �?Relaciones entre prácticas y grupos
 
 ### 2. Generar Indicaciones para un Paciente
 
@@ -194,10 +179,10 @@ Para importar prácticas desde Excel, el archivo debe tener las siguientes colum
 2. En el **Simulador**, selecciona las prácticas que necesita el paciente
 3. Haz clic en **"Generar Indicaciones"**
 4. El sistema mostrará:
-   - ✅ Indicaciones optimizadas (sin redundancias)
-   - ✅ Requisitos de ayuno consolidados
-   - ✅ Instrucciones de recolección de muestras
-   - ✅ Grupos utilizados para la generación
+   - �?Indicaciones optimizadas (sin redundancias)
+   - �?Requisitos de ayuno consolidados
+   - �?Instrucciones de recolección de muestras
+   - �?Grupos utilizados para la generación
 
 ### 3. Gestionar Prácticas
 
@@ -216,30 +201,30 @@ Para importar prácticas desde Excel, el archivo debe tener las siguientes colum
 
 ---
 
-## 🗂️ Estructura del Proyecto
+## 🗂�?Estructura del Proyecto
 
 ```
 indicaciones-app/
 ├── docs/                      # Documentación y capturas
-│   ├── screenshot-home.png
-│   ├── screenshot-simulador.png
-│   └── screenshot-cargador.png
+�?  ├── screenshot-home.png
+�?  ├── screenshot-simulador.png
+�?  └── screenshot-cargador.png
 ├── prisma/
-│   ├── schema.prisma          # Esquema de base de datos
-│   ├── migrations/            # Historial de migraciones
-│   └── indicaciones.db        # Base de datos SQLite
+�?  ├── schema.prisma          # Esquema de base de datos
+�?  ├── migrations/            # Historial de migraciones
+�?  └── indicaciones.db        # Base de datos SQLite
 ├── src/
-│   ├── database/
-│   │   └── prisma.js          # Cliente Prisma
-│   ├── routes/
-│   │   ├── practicas.js       # API de prácticas
-│   │   ├── grupos.js          # API de grupos
-│   │   └── indicaciones.js    # API de indicaciones
-│   └── server.js              # Servidor Express
+�?  ├── database/
+�?  �?  └── prisma.js          # Cliente Prisma
+�?  ├── routes/
+�?  �?  ├── practicas.js       # API de prácticas
+�?  �?  ├── grupos.js          # API de grupos
+�?  �?  └── indicaciones.js    # API de indicaciones
+�?  └── server.js              # Servidor Express
 ├── public/
-│   ├── index.html             # Interfaz principal
-│   ├── cargador.html          # Cargador de datos
-│   └── styles.css             # Estilos
+�?  ├── index.html             # Interfaz principal
+�?  ├── cargador.html          # Cargador de datos
+�?  └── styles.css             # Estilos
 ├── datos_reales_import.sql    # Datos de ejemplo
 ├── .gitignore                 # Archivos ignorados por Git
 ├── package.json               # Dependencias del proyecto
@@ -248,7 +233,7 @@ indicaciones-app/
 
 ---
 
-## 🛠️ Stack Tecnológico
+## 🛠�?Stack Tecnológico
 
 ### Backend
 - **Node.js** v18+
@@ -354,9 +339,9 @@ GET    /api/debug/count         # Contadores de registros en BD
 
 **Resultado:**
 El sistema detecta que todas requieren:
-- ✅ Ayuno de 8 horas
-- ✅ Extracción entre 7:00 y 8:30 AM
-- ✅ Evitar estrés antes de la extracción
+- �?Ayuno de 8 horas
+- �?Extracción entre 7:00 y 8:30 AM
+- �?Evitar estrés antes de la extracción
 
 **Indicaciones generadas:**
 ```
@@ -378,9 +363,9 @@ PREPARACIÓN PARA SUS ESTUDIOS:
 
 **Resultado:**
 El sistema optimiza las indicaciones:
-- ✅ Agrupa las dos primeras (primera orina)
-- ✅ Separa la recolección de 24 horas
-- ✅ Evita redundancias en las instrucciones
+- �?Agrupa las dos primeras (primera orina)
+- �?Separa la recolección de 24 horas
+- �?Evita redundancias en las instrucciones
 
 ---
 
@@ -433,7 +418,7 @@ Este proyecto está bajo la **Licencia MIT**. Ver archivo [LICENSE](LICENSE) par
 ```
 MIT License
 
-Copyright (c) 2025 DGSISAN
+Copyright (c) 2025 Claude/Claudio
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software")...
@@ -443,7 +428,7 @@ of this software and associated documentation files (the "Software")...
 
 ## 👥 Autores
 
-- **Equipo DGSISAN** - *Desarrollo y diseño* - 2025
+- **Equipo Claude/Claudio** - *Desarrollo y diseño* - 2025
 - **RED de Laboratorios** - *Provisión de datos y requisitos*
 
 ---
@@ -452,7 +437,7 @@ of this software and associated documentation files (the "Software")...
 
 - 🏥 **RED de Laboratorios** por proporcionar los datos de prácticas e indicaciones
 - 💻 **Comunidad Open Source** por las herramientas utilizadas
-- 👨‍⚕️ **Profesionales de laboratorio** por la validación de las indicaciones
+- 👨‍⚕�?**Profesionales de laboratorio** por la validación de las indicaciones
 - 🎨 **Diseñadores** que inspiraron la interfaz
 
 ---
@@ -461,20 +446,20 @@ of this software and associated documentation files (the "Software")...
 
 ¿Necesitas ayuda? Tienes varias opciones:
 
-- 📧 **Email**: soporte@dgsisan.gob.ar
+- 📧 **Email**: soporte@Claude/Claudio.gob.ar
 - 🐛 **Issues**: [GitHub Issues](https://github.com/TU_USUARIO/indicaciones-laboratorio/issues)
 - 📖 **Documentación**: [Wiki del proyecto](https://github.com/TU_USUARIO/indicaciones-laboratorio/wiki)
 - 💬 **Discusiones**: [GitHub Discussions](https://github.com/TU_USUARIO/indicaciones-laboratorio/discussions)
 
 ---
 
-## 🗺️ Roadmap
+## 🗺�?Roadmap
 
 ### v1.0 (Actual)
-- ✅ Sistema básico de gestión de prácticas
-- ✅ Generación de indicaciones optimizadas
-- ✅ Importación desde Excel
-- ✅ Interfaz web responsive
+- �?Sistema básico de gestión de prácticas
+- �?Generación de indicaciones optimizadas
+- �?Importación desde Excel
+- �?Interfaz web responsive
 
 ### v1.1 (Próximo)
 - 🔄 Sistema de usuarios y permisos
@@ -483,10 +468,10 @@ of this software and associated documentation files (the "Software")...
 - 🔄 API REST completa con autenticación
 
 ### v2.0 (Futuro)
-- ⏳ Integración con sistemas hospitalarios
-- ⏳ App móvil (iOS/Android)
-- ⏳ Notificaciones automáticas a pacientes
-- ⏳ Dashboard de estadísticas y reportes
+- �?Integración con sistemas hospitalarios
+- �?App móvil (iOS/Android)
+- �?Notificaciones automáticas a pacientes
+- �?Dashboard de estadísticas y reportes
 
 ---
 
@@ -504,9 +489,9 @@ of this software and associated documentation files (the "Software")...
 
 <div align="center">
 
-### ⭐ Si este proyecto te resulta útil, considera darle una estrella en GitHub
+### �?Si este proyecto te resulta útil, considera darle una estrella en GitHub
 
-**Hecho con ❤️ por el equipo DGSISAN**
+**Hecho con ❤️ por el equipo Claude/Claudio**
 
 [⬆️ Volver arriba](#-sistema-de-indicaciones-de-laboratorio)
 
