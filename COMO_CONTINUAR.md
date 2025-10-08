@@ -19,6 +19,8 @@ cd C:\Users\clau\Documents\DGSISAN_2025bis\Indicaciones\indicaciones-app2
 git log --oneline -5
 
 # Debería mostrar:
+# 7dd6a68 Documentación completa de Etapa 6
+# 5fc0829 Etapa 6 completada - Frontend
 # 0395b32 Etapa 5 completada - Importación de datos reales desde Excel
 # 5a1e058 Resumen completo de la sesión de desarrollo
 # 8bc8fc0 Documentación completa de tests y estado actual
@@ -74,7 +76,8 @@ curl http://localhost:3000/api/practicas | grep -o "\"total\":[0-9]*"
 - Etapa 2: Configuración base
 - Etapa 3: Base de datos (SQLite)
 - Etapa 4: Backend API REST FUNCIONAL ⭐
-- **Etapa 5: Importación de datos reales ✅ COMPLETADA**
+- **Etapa 5: Importación de datos reales ✅
+- **Etapa 6: Frontend web completo ✅ COMPLETADA****
   - 846 prácticas reales importadas
   - 61 grupos de indicaciones
   - 138 indicaciones atómicas
@@ -203,7 +206,7 @@ indicaciones-app2/
 **Contexto rápido:**
 - Proyecto: Sistema de indicaciones de laboratorio
 - Stack: Node.js + Express + Prisma + SQLite
-- Estado: Backend funcional + Datos reales importados (Etapa 5 completada)
+- Estado: Sistema COMPLETO funcional - Backend + Frontend (Etapa 6 completada)
 - Siguiente: Etapa 6 (Frontend HTML/CSS/JS)
 - Carpeta: `C:\Users\clau\Documents\DGSISAN_2025bis\Indicaciones\indicaciones-app2`
 - Puerto: 3000
@@ -217,7 +220,9 @@ indicaciones-app2/
 
 **Último commit:**
 ```
-0395b32 Etapa 5 completada - Importación de datos reales desde Excel
+7dd6a68 Documentación completa de Etapa 6
+# 5fc0829 Etapa 6 completada - Frontend
+# 0395b32 Etapa 5 completada - Importación de datos reales desde Excel
 ```
 
 **Base de datos:**
