@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Indicaciones - Laboratorio</title>
+    <meta name="description" content="Sistema de generación automática de indicaciones de laboratorio">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <!-- ============================================ -->
+    <!-- HEADER -->
+    <!-- ============================================ -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="header-title">
+                    <span class="icon">🧪</span>
+                    Simulador de Indicaciones de Laboratorio
+                </h1>
+                <p class="header-subtitle">
+                    Sistema inteligente de generación de indicaciones para pacientes
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================ -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================================ -->
+    <main class="main">
+        <div class="container">
+
+            <!-- ============================================ -->
+            <!-- BUSCADOR DE PRÁCTICAS -->
+            <!-- ============================================ -->
+            <section class="card search-section">
+                <h2 class="section-title">
+                    🔍 Buscar Prácticas
+                </h2>
+
+                <div class="search-box">
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="search-input"
+                        placeholder="Buscar prácticas por nombre (ej: GLUCOSA, HEMOGRAMA, etc.)"
+                        autocomplete="off"
+                    >
+                    <button id="searchButton" class="btn btn-search">
+                        <span class="btn-icon">🔍</span>
+                        Buscar
+                    </button>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filters">
+                    <label class="filter-label">
+                        <span>Filtrar por área:</span>
+                        <select id="areaFilter" class="filter-select">
+                            <option value="">Todas las áreas</option>
+                            <option value="QUIMICA">Química</option>
+                            <option value="HEMATO/HEMOSTASIA">Hematología</option>
+                            <option value="BACTERIO">Bacteriología</option>
+                            <option value="VIROLOGIA">Virología</option>
+                            <option value="ENDOCRINO">Endocrinología</option>
+                            <option value="INMUNOLOGIA">Inmunología</option>
+                            <option value="PARASITO">Parasitología</option>
+                            <option value="URGENCIAS Y LIQUIDOS">Urgencias</option>
+                            <option value="GENETICA">Genética</option>
+                            <option value="MICO">Micología</option>
+                        </select>
+                    </label>
+                </div>
+
+                <!-- Resultados de búsqueda -->
+                <div id="searchResults" class="search-results hidden"></div>
+
+                <!-- Loading indicator -->
+                <div id="searchLoading" class="loading hidden">
+                    <div class="spinner"></div>
+                    <span>Buscando prácticas...</span>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- PRÁCTICAS SELECCIONADAS -->
+            <!-- ============================================ -->
+            <section class="card selected-section">
+                <h2 class="section-title">
+                    ✅ Prácticas Seleccionadas
+                    <span id="selectedCount" class="count-badge">0</span>
+                </h2>
+
+                <div id="selectedPracticas" class="selected-list">
+                    <div class="empty-state">
+                        <span class="empty-icon">📋</span>
+                        <p>No hay prácticas seleccionadas</p>
+                        <small>Busca y selecciona prácticas de laboratorio para generar indicaciones</small>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div id="actionButtons" class="action-buttons hidden">
+                    <button id="clearButton" class="btn btn-secondary">
+                        <span class="btn-icon">🗑️</span>
+                        Limpiar Todo
+                    </button>
+                    <button id="generateButton" class="btn btn-primary">
+                        <span class="btn-icon">✨</span>
+                        Generar Indicaciones
+                    </button>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- INDICACIONES GENERADAS -->
+            <!-- ============================================ -->
+            <section id="resultSection" class="card result-section hidden">
+                <h2 class="section-title">
+                    📄 Indicaciones para el Paciente
+                </h2>
+
+                <!-- Loading indicator -->
+                <div id="generateLoading" class="loading hidden">
+                    <div class="spinner"></div>
+                    <span>Generando indicaciones...</span>
+                </div>
+
+                <!-- Resultado exitoso -->
+                <div id="resultSuccess" class="result-content hidden">
+                    <!-- Resumen -->
+                    <div class="result-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Prácticas:</span>
+                            <span id="summaryPracticas" class="summary-value">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Grupos:</span>
+                            <span id="summaryGrupos" class="summary-value">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Indicaciones:</span>
+                            <span id="summaryIndicaciones" class="summary-value">0</span>
+                        </div>
+                        <div class="summary-item" id="summaryAyunoContainer">
+                            <span class="summary-label">⏰ Ayuno:</span>
+                            <span id="summaryAyuno" class="summary-value ayuno-highlight">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Texto de indicaciones -->
+                    <div class="result-text">
+                        <div id="indicacionesText" class="indicaciones-text"></div>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="result-actions">
+                        <button id="copyButton" class="btn btn-secondary">
+                            <span class="btn-icon">📋</span>
+                            Copiar al Portapapeles
+                        </button>
+                        <button id="printButton" class="btn btn-secondary">
+                            <span class="btn-icon">🖨️</span>
+                            Imprimir
+                        </button>
+                        <button id="newButton" class="btn btn-primary">
+                            <span class="btn-icon">➕</span>
+                            Nueva Consulta
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Resultado con error -->
+                <div id="resultError" class="result-error hidden">
+                    <div class="error-icon">⚠️</div>
+                    <h3 class="error-title">Error al generar indicaciones</h3>
+                    <p id="errorMessage" class="error-message"></p>
+                    <button id="retryButton" class="btn btn-primary">
+                        <span class="btn-icon">🔄</span>
+                        Reintentar
+                    </button>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- INFORMACIÓN DEL SISTEMA -->
+            <!-- ============================================ -->
+            <section class="card info-section">
+                <h2 class="section-title">ℹ️ Información del Sistema</h2>
+                <div class="info-content">
+                    <div class="info-item">
+                        <strong>Prácticas disponibles:</strong>
+                        <span id="totalPracticas" class="info-value">Cargando...</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Estado del servidor:</strong>
+                        <span id="serverStatus" class="info-value status-checking">Verificando...</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Versión:</strong>
+                        <span class="info-value">1.3.0</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- ============================================ -->
+    <!-- FOOTER -->
+    <!-- ============================================ -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+                Sistema de Indicaciones de Laboratorio v1.3.0
+                <br>
+                <small>Desarrollado con Node.js + Express + Prisma + SQLite</small>
+            </p>
+        </div>
+    </footer>
+
+    <!-- ============================================ -->
+    <!-- TOAST NOTIFICATIONS -->
+    <!-- ============================================ -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- ============================================ -->
+    <!-- SCRIPTS -->
+    <!-- ============================================ -->
+    <script src="/js/api.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/simulador.js"></script>
+</body>
+</html>
