@@ -1,0 +1,312 @@
+// ====================================
+// PRISMA SCHEMA - Sistema de Indicaciones de Laboratorio
+// ====================================
+//
+// Este archivo define el modelo de datos completo del sistema.
+// Prisma lo convierte automáticamente en:
+// - Migraciones SQL
+// - Cliente TypeScript/JavaScript type-safe
+//
+// Basado en el análisis del archivo Excel:
+// - 852 prácticas de laboratorio
+// - 62 grupos de indicaciones
+// - 10 áreas de laboratorio
+// - 7 tablas principales
+//
+// Fecha de creación: 07/10/2025
+// Autor: Claude Code
+// ====================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+  // Para migrar a MySQL/PostgreSQL, cambiar provider y url:
+  // provider = "mysql"
+  // url      = env("DATABASE_URL")
+}
+
+// ====================================
+// 1️⃣ AREA - Áreas del Laboratorio
+// ====================================
+//
+// Representa las diferentes áreas especializadas del laboratorio.
+// Ejemplo: VIROLOGIA, QUIMICA, BACTERIO, ENDOCRINO, etc.
+//
+// Relaciones:
+// - Un área tiene muchas prácticas (1:N)
+//
+model Area {
+  id_area     Int      @id @default(autoincrement())
+  nombre      String   @unique // VIROLOGIA, QUIMICA, etc.
+  descripcion String?  // Descripción detallada del área
+  activo      Boolean  @default(true) // Eliminación lógica
+
+  // Metadata
+  fechaCreacion DateTime @default(now())
+  fechaModificacion DateTime @updatedAt
+
+  // Relaciones
+  practicas Practica[] // Una área tiene muchas prácticas
+
+  @@map("AREA")
+  @@index([activo])
+}
+
+// ====================================
+// 2️⃣ PRACTICA - Catálogo de Prácticas de Laboratorio
+// ====================================
+//
+// Representa las prácticas/estudios que se realizan en el laboratorio.
+// Total: 852 prácticas identificadas en el análisis.
+//
+// Relaciones:
+// - Pertenece a un área (N:1)
+// - Tiene múltiples grupos de indicaciones (N:M)
+// - Puede tener reglas alternativas (1:N)
+//
+model Practica {
+  id_practica Int      @id @default(autoincrement())
+  codigo_did  String   @unique // Código DID SNOMED (26758301000999116)
+  nombre      String   // Nombre de la práctica (CITOMEGALOVIRUS PCR)
+
+  // Relación con área
+  id_area     Int?
+  area        Area?    @relation(fields: [id_area], references: [id_area])
+
+  // Estados
+  activo      Boolean  @default(true) // Eliminación lógica
+
+  // Metadata
+  fechaCreacion DateTime @default(now())
+  fechaModificacion DateTime @updatedAt
+
+  // Relaciones
+  grupos PracticaGrupo[] // Relación M:N con grupos
+  reglasComoP1 ReglaAlternativa[] @relation("Practica1") // Reglas donde es practica_1
+  reglasComoP2 ReglaAlternativa[] @relation("Practica2") // Reglas donde es practica_2
+
+  @@map("PRACTICA")
+  @@index([codigo_did])
+  @@index([activo])
+  @@index([id_area])
+}
+
+// ====================================
+// 3️⃣ GRUPO - Grupos de Indicaciones
+// ====================================
+//
+// Representa grupos de indicaciones semánticamente iguales.
+// Total: 62 grupos identificados en el análisis.
+//
+// Relaciones:
+// - Tiene múltiples prácticas (N:M)
+// - Tiene múltiples indicaciones (N:M)
+// - Puede ser el resultado de una regla alternativa (1:N)
+//
+model Grupo {
+  id_grupo    Int      @id @default(autoincrement())
+  nombre      String   // Resumen corto (CONJUNTO DE INDICACIONES [62])
+  descripcion String?  // Texto completo de las indicaciones del grupo
+
+  // Atributos de preparación
+  horas_ayuno Int?     // 3, 4, 8 (null si no requiere ayuno)
+  tipo_orina  String?  // PRIMERA_ORINA, ORINA_12H, ORINA_24H, ORINA_2H
+  horas_orina Int?     // 12, 24, 2, -1 (primera orina)
+
+  // Estados
+  activo      Boolean  @default(true) // Eliminación lógica
+
+  // Metadata
+  fechaCreacion DateTime @default(now())
+  fechaModificacion DateTime @updatedAt
+
+  // Relaciones
+  practicas    PracticaGrupo[]    // Relación M:N con prácticas
+  indicaciones GrupoIndicacion[]  // Relación M:N con indicaciones
+  reglasResultantes ReglaAlternativa[] // Reglas que usan este grupo
+
+  @@map("GRUPO")
+  @@index([activo])
+  @@index([horas_ayuno])
+  @@index([tipo_orina])
+}
+
+// ====================================
+// 4️⃣ INDICACION - Indicaciones Atómicas Reutilizables
+// ====================================
+//
+// Representa instrucciones individuales que se pueden reutilizar.
+// Ejemplo: "Concurrir con 8 horas de ayuno"
+//
+// Relaciones:
+// - Pertenece a múltiples grupos (N:M)
+// - Puede tener prioridad sobre otra indicación (1:1)
+//
+model Indicacion {
+  id_indicacion Int     @id @default(autoincrement())
+  texto         String  // Texto de la indicación
+  tipo          String  // AYUNO, ORINA, MATERIA_FECAL, GENERAL, MEDICACION, HORARIO, FUM
+  orden         Int     @default(0) // Orden de presentación dentro del tipo
+
+  // Prioridad (si existe otra indicación de menor prioridad, eliminarla)
+  id_indicacion_prioridad Int? // ID de la indicación que tiene menor prioridad
+  indicacionPrioridad Indicacion? @relation("IndicacionPrioridad", fields: [id_indicacion_prioridad], references: [id_indicacion], onDelete: NoAction, onUpdate: NoAction)
+  indicacionesPriorizadas Indicacion[] @relation("IndicacionPrioridad")
+
+  // Estados
+  activo        Boolean @default(true) // Eliminación lógica
+
+  // Metadata
+  fechaCreacion DateTime @default(now())
+  fechaModificacion DateTime @updatedAt
+
+  // Relaciones
+  grupos GrupoIndicacion[] // Relación M:N con grupos
+
+  @@map("INDICACION")
+  @@index([tipo])
+  @@index([activo])
+}
+
+// ====================================
+// 5️⃣ PRACTICA_GRUPO - Relación M:N entre Prácticas y Grupos
+// ====================================
+//
+// Tabla intermedia que vincula prácticas con grupos de indicaciones.
+// Una práctica puede tener múltiples grupos.
+// Un grupo puede aplicar a múltiples prácticas.
+//
+model PracticaGrupo {
+  id_practica Int
+  id_grupo    Int
+
+  // Relaciones
+  practica    Practica @relation(fields: [id_practica], references: [id_practica], onDelete: Cascade)
+  grupo       Grupo    @relation(fields: [id_grupo], references: [id_grupo], onDelete: Cascade)
+
+  // Estados
+  activo      Boolean  @default(true) // Permite desactivar la relación sin eliminarla
+
+  // Metadata
+  fechaCreacion DateTime @default(now())
+
+  @@id([id_practica, id_grupo]) // Clave primaria compuesta
+  @@map("PRACTICA_GRUPO")
+  @@index([id_practica])
+  @@index([id_grupo])
+  @@index([activo])
+}
+
+// ====================================
+// 6️⃣ GRUPO_INDICACION - Relación M:N entre Grupos e Indicaciones
+// ====================================
+//
+// Tabla intermedia que vincula grupos con indicaciones.
+// Un grupo puede tener múltiples indicaciones.
+// Una indicación puede pertenecer a múltiples grupos.
+//
+model GrupoIndicacion {
+  id_grupo      Int
+  id_indicacion Int
+  orden         Int     @default(0) // Orden de presentación dentro del grupo
+
+  // Relaciones
+  grupo         Grupo      @relation(fields: [id_grupo], references: [id_grupo], onDelete: Cascade)
+  indicacion    Indicacion @relation(fields: [id_indicacion], references: [id_indicacion], onDelete: Cascade)
+
+  // Estados
+  activo        Boolean    @default(true) // Permite desactivar la relación sin eliminarla
+
+  // Metadata
+  fechaCreacion DateTime   @default(now())
+
+  @@id([id_grupo, id_indicacion]) // Clave primaria compuesta
+  @@map("GRUPO_INDICACION")
+  @@index([id_grupo])
+  @@index([id_indicacion])
+  @@index([activo])
+}
+
+// ====================================
+// 7️⃣ REGLA_ALTERNATIVA - Reglas Especiales para Combinaciones
+// ====================================
+//
+// Define comportamientos especiales cuando se solicitan 2 prácticas juntas.
+// Ejemplo: UROCULTIVO + ORINA 24H → Usar grupo especial
+//
+// Total: ~12 reglas identificadas en el análisis (hoja CASOS DE USO)
+//
+model ReglaAlternativa {
+  id_regla     Int     @id @default(autoincrement())
+
+  // Prácticas involucradas
+  id_practica_1 Int
+  id_practica_2 Int
+
+  // Grupo resultante a aplicar
+  id_grupo_resultado Int
+
+  // Relaciones
+  practica1    Practica @relation("Practica1", fields: [id_practica_1], references: [id_practica], onDelete: Cascade)
+  practica2    Practica @relation("Practica2", fields: [id_practica_2], references: [id_practica], onDelete: Cascade)
+  grupoResultante Grupo @relation(fields: [id_grupo_resultado], references: [id_grupo], onDelete: Cascade)
+
+  // Descripción
+  descripcion  String? // Descripción de la regla (ej: "UROCULTIVO + ORINA 24H")
+
+  // Estados
+  activo       Boolean @default(true) // Eliminación lógica
+
+  // Metadata
+  fechaCreacion DateTime @default(now())
+  fechaModificacion DateTime @updatedAt
+
+  @@map("REGLA_ALTERNATIVA")
+  @@unique([id_practica_1, id_practica_2]) // No puede haber 2 reglas iguales
+  @@index([activo])
+  @@index([id_practica_1])
+  @@index([id_practica_2])
+  @@index([id_grupo_resultado])
+}
+
+// ====================================
+// NOTAS IMPORTANTES
+// ====================================
+//
+// 1. ELIMINACIÓN LÓGICA:
+//    - Todas las tablas tienen campo `activo`
+//    - No se borran registros, solo se marca activo=false
+//    - Permite auditoría y recuperación de datos
+//
+// 2. METADATA:
+//    - `fechaCreacion`: Automática con @default(now())
+//    - `fechaModificacion`: Automática con @updatedAt (solo algunas tablas)
+//
+// 3. ÍNDICES:
+//    - Se crean índices en campos frecuentemente consultados
+//    - Mejora el rendimiento de queries
+//
+// 4. CASCADA:
+//    - Las relaciones M:N tienen onDelete: Cascade
+//    - Si se elimina una práctica, se eliminan sus relaciones
+//
+// 5. MIGRACIÓN:
+//    - Para cambiar a MySQL: cambiar provider a "mysql"
+//    - Para PostgreSQL: cambiar provider a "postgresql"
+//    - Ejecutar: npx prisma migrate dev
+//
+// ====================================
+// COMANDOS ÚTILES
+// ====================================
+//
+// npx prisma migrate dev        # Crear y ejecutar migración
+// npx prisma generate           # Generar cliente de Prisma
+// npx prisma studio             # Abrir interfaz visual (localhost:5555)
+// npx prisma db seed            # Cargar datos de ejemplo
+// npx prisma migrate reset      # Resetear BD (¡CUIDADO!)
+//
+// ====================================

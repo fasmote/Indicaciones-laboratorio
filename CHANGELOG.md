@@ -23,6 +23,75 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ---
 
+## [1.1.0] - 2025-10-08
+
+### 💾 Etapa 3 Completada - Base de Datos y Modelos
+
+#### ✨ Agregado
+- **Schema de Prisma** (`prisma/schema.prisma`):
+  - 7 modelos definidos: Area, Practica, Grupo, Indicacion, PracticaGrupo, GrupoIndicacion, ReglaAlternativa
+  - Relaciones M:N correctamente configuradas
+  - Índices para optimizar consultas
+  - Eliminación lógica (campo `activo`)
+  - Metadata automática (fechaCreacion, fechaModificacion)
+  - Comentarios educativos extensos
+
+- **Configuración de Prisma**:
+  - `src/config/database.js` - Cliente de Prisma con patrón Singleton
+  - `src/config/constants.js` - Constantes del sistema (tipos, mensajes, límites)
+  - Manejo de conexión y desconexión graceful
+
+- **Base de Datos SQLite**:
+  - Migración inicial ejecutada (`20251008094923_init`)
+  - Base de datos creada: `prisma/indicaciones.db`
+  - Prisma Client generado
+
+- **Script de Seed** (`scripts/seed.js`):
+  - 5 áreas de ejemplo
+  - 10 prácticas de ejemplo
+  - 5 grupos de indicaciones
+  - 10 indicaciones atómicas
+  - Relaciones completas entre entidades
+  - 1 regla alternativa de ejemplo
+  - Seed ejecutado con éxito
+
+- **Archivo `.env`**:
+  - Variables de entorno configuradas para desarrollo local
+
+#### 📊 Estructura de Base de Datos
+
+**Tablas creadas:**
+1. `AREA` - Áreas del laboratorio (Virología, Química, etc.)
+2. `PRACTICA` - Catálogo de prácticas de laboratorio
+3. `GRUPO` - Grupos de indicaciones semánticamente iguales
+4. `INDICACION` - Indicaciones atómicas reutilizables
+5. `PRACTICA_GRUPO` - Relación M:N entre Prácticas y Grupos
+6. `GRUPO_INDICACION` - Relación M:N entre Grupos e Indicaciones
+7. `REGLA_ALTERNATIVA` - Reglas especiales para combinaciones
+
+**Datos de ejemplo cargados:**
+- ✅ 5 áreas
+- ✅ 10 prácticas
+- ✅ 5 grupos
+- ✅ 10 indicaciones
+- ✅ 10 relaciones práctica-grupo
+- ✅ 15 relaciones grupo-indicación
+- ✅ 1 regla alternativa
+
+#### 🔧 Scripts NPM
+- `npm run db:generate` - Generar Prisma Client
+- `npm run db:migrate` - Ejecutar migraciones
+- `npm run db:studio` - Abrir interfaz visual de Prisma
+- `npm run db:seed` - Cargar datos de ejemplo
+- `npm run db:reset` - Resetear base de datos
+
+#### 📚 Documentación
+- Schema de Prisma completamente documentado con comentarios educativos
+- Archivos de configuración con explicaciones detalladas
+- Script de seed con ejemplos didácticos
+
+---
+
 ## [1.0.0] - 2025-10-07
 
 ### 🎉 Versión Inicial - Etapa 2 Completada
