@@ -296,3 +296,10 @@ SCRATCH.md
 *.mov
 *.mp4
 *.avi
+
+# Screenshots y capturas de errores
+screen_errores/
+screenshots/
+*.png
+*.jpg
+*.jpeg

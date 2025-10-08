@@ -48,7 +48,7 @@ async function listarTodas(req, res, next) {
     if (buscar) {
       where.nombre = {
         contains: buscar,
-        mode: 'insensitive' // Case-insensitive
+        // SQLite LIKE es case-insensitive por defecto
       };
     }
 
