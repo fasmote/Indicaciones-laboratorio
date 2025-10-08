@@ -12,7 +12,7 @@
     "db:studio": "prisma studio",
     "db:seed": "node scripts/seed.js",
     "db:reset": "prisma migrate reset",
-    "import": "node scripts/importar-excel.js",
+    "import": "node scripts/importar-simplificado.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
