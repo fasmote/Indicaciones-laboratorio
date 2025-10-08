@@ -23,6 +23,81 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ---
 
+## [1.2.0] - 2025-10-08
+
+### 🌐 Etapa 4 Completada - Backend API REST (Funcional!)
+
+#### ✨ Agregado
+- **Servidor Express** (`src/server.js`):
+  - Servidor HTTP funcionando en puerto 3000
+  - Middlewares configurados (CORS, JSON parser, logger)
+  - Archivos estáticos servidos desde public/
+  - Manejo de errores global
+  - Cierre graceful del servidor
+
+- **Middlewares**:
+  - `src/middleware/logger.js` - Logging de todas las requests
+  - `src/middleware/errorHandler.js` - Manejo centralizado de errores
+
+- **Rutas y Controladores**:
+  - `src/routes/practicas.js` + `src/controllers/practicasController.js`
+    - GET /api/practicas - Listar con filtros y paginación
+    - GET /api/practicas/:id - Obtener con detalles completos
+    - POST /api/practicas - Crear con validaciones
+    - PUT /api/practicas/:id - Actualizar
+    - DELETE /api/practicas/:id - Eliminar lógicamente
+
+  - `src/routes/grupos.js` + `src/controllers/gruposController.js`
+    - GET /api/grupos - Listar todos
+    - GET /api/grupos/:id - Obtener con indicaciones
+
+  - `src/routes/indicaciones.js` + `src/controllers/indicacionesController.js`
+    - GET /api/indicaciones - Listar todas ordenadas
+
+  - `src/routes/simulador.js` + `src/controllers/simuladorController.js`
+    - POST /api/simulador/generar - ⭐ **Endpoint principal del sistema**
+
+- **Servicio de Indicaciones Inteligentes** (`src/services/indicacionesService.js`):
+  - ⭐ **CORAZÓN DEL SISTEMA**
+  - Algoritmo de consolidación implementado
+  - Eliminación de duplicados
+  - Cálculo de ayuno máximo
+  - Validación de compatibilidad de orina
+  - Ordenamiento por prioridad
+  - Generación de texto formateado
+
+- **Dependencia agregada**:
+  - `dotenv` (^17.2.3) - Variables de entorno
+
+#### ✅ Probado y Funcionando
+- Servidor inicia correctamente
+- GET /api/health - ✅ Responde
+- GET /api/practicas - ✅ Retorna 10 prácticas de ejemplo
+- POST /api/simulador/generar - ✅ **GENERA INDICACIONES CONSOLIDADAS**
+
+**Ejemplo de respuesta del simulador:**
+```json
+{
+  "indicaciones_consolidadas": "Indicaciones para los estudios solicitados:\n1. Concurrir al Laboratorio con 8 horas de ayuno\n2. Concurrir entre las 7:00 y las 9:00 hs\n3. Traer orden médica actualizada\n4. Concurrir con documento de identidad\n\n📋 RESUMEN:\n⏰ Ayuno requerido: 8 horas",
+  "ayuno_horas": 8,
+  "detalles": {
+    "cantidad_practicas": 3,
+    "cantidad_grupos": 2,
+    "cantidad_indicaciones": 4
+  }
+}
+```
+
+#### 🎯 Estado del Proyecto
+- Etapa 1: Análisis y diseño ✅
+- Etapa 2: Configuración base ✅
+- Etapa 3: Base de datos ✅
+- **Etapa 4: Backend API ✅ FUNCIONAL**
+- Siguiente: Etapa 5 - Importación de datos
+- Siguiente: Etapa 6 - Frontend
+
+---
+
 ## [1.1.0] - 2025-10-08
 
 ### 💾 Etapa 3 Completada - Base de Datos y Modelos
