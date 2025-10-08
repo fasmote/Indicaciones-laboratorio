@@ -54,32 +54,39 @@
 
 ---
 
-## 🎥 Demo
+## 🎥 Demo - Backend Funcional ✅
 
-### Simulador en Acción
+**El backend está completamente funcional y probado!**
 
+### Ejemplo Real de Uso:
+
+```bash
+# Iniciar el servidor
+npm run dev
+
+# Generar indicaciones para 3 prácticas
+curl -X POST http://localhost:3000/api/simulador/generar \
+  -H "Content-Type: application/json" \
+  -d '{"id_practicas": [1, 2, 3]}'
 ```
-1. Seleccionar prácticas de laboratorio
-2. Hacer clic en "Generar Indicaciones"
-3. Ver resultados consolidados
-4. Copiar al portapapeles o imprimir
+
+**Resultado real del sistema:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "indicaciones_consolidadas": "Indicaciones para los estudios solicitados:\n\n1. Concurrir al Laboratorio con 8 horas de ayuno\n\n2. Concurrir entre las 7:00 y las 9:00 hs\n\n3. Traer orden médica actualizada\n\n4. Concurrir con documento de identidad\n\n📋 RESUMEN:\n⏰ Ayuno requerido: 8 horas\n",
+    "ayuno_horas": 8,
+    "detalles": {
+      "cantidad_practicas": 3,
+      "cantidad_indicaciones": 4
+    }
+  }
+}
 ```
 
-**Ejemplo de salida:**
-
-```
-Indicaciones para los estudios solicitados:
-
-1. Concurrir al Laboratorio con 8 hs de ayuno
-
-2. Recolectar primera orina de la mañana en frasco estéril
-
-3. No tomar medicación anticoagulante 24 horas antes del estudio
-
-📋 RESUMEN:
-⏰ Ayuno requerido: 8 horas
-🚰 Tipo de orina: PRIMERA ORINA DE LA MAÑANA
-```
+**Tests realizados:** 10/10 ✅ (ver `docs/TESTING_Y_ESTADO_ACTUAL.md`)
 
 ---
 
