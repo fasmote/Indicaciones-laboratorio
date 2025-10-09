@@ -36,6 +36,7 @@
 - ✅ **Simulador Inteligente**: Genera indicaciones consolidadas a partir de múltiples prácticas seleccionadas
 - ✅ **Resolución de Conflictos**: Maneja automáticamente conflictos de ayuno, tipo de orina y preparaciones
 - ✅ **Eliminación de Duplicados**: Consolida indicaciones repetidas
+- ✅ **Indicadores Visuales**: Badge verde/amarillo muestra qué prácticas tienen indicaciones configuradas (v1.5.0)
 - ✅ **ABM Completo**: Alta, Baja, Modificación de Prácticas, Grupos e Indicaciones
 - ✅ **Importación desde Excel**: Carga masiva de datos desde archivo XLSX
 - ✅ **Interfaz Web Responsiva**: HTML/CSS/JavaScript vanilla, sin frameworks

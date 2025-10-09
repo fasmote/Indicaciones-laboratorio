@@ -205,6 +205,10 @@ body {
 }
 
 .result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
     padding: var(--spacing-md);
     border: 2px solid var(--border-color);
     border-radius: var(--border-radius);
@@ -226,6 +230,20 @@ body {
     background: #f0fdf4;
 }
 
+/* ⭐ NUEVO: Estilo para prácticas sin indicaciones */
+.result-item.sin-indicaciones {
+    border-left: 4px solid var(--color-warning);
+    background: #fffbeb;
+}
+
+.result-item.sin-indicaciones:hover {
+    background: #fef3c7;
+}
+
+.result-item-content {
+    flex: 1;
+}
+
 .result-item-name {
     font-weight: 600;
     color: #1e293b;
@@ -243,6 +261,30 @@ body {
     background: var(--bg-tertiary);
     padding: 2px 8px;
     border-radius: 4px;
+}
+
+/* ⭐ NUEVO: Badges de indicaciones */
+.badge-indicaciones {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.badge-si {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+.badge-no {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
 }
 
 /* ============================================ */

@@ -61,7 +61,10 @@ async function listarTodas(req, res, next) {
       prisma.practica.findMany({
         where,
         include: {
-          area: true // Incluir datos del área
+          area: true, // Incluir datos del área
+          grupos: {
+            select: { id_grupo: true } // Solo para contar si tiene grupos
+          }
         },
         orderBy: { nombre: 'asc' },
         take,
@@ -71,10 +74,17 @@ async function listarTodas(req, res, next) {
       prisma.practica.count({ where })
     ]);
 
+    // ⭐ EXPLICACIÓN: Agregar flag 'tiene_indicaciones' a cada práctica
+    const practicasConFlag = practicas.map(practica => ({
+      ...practica,
+      tiene_indicaciones: practica.grupos && practica.grupos.length > 0,
+      grupos: undefined // Remover grupos del resultado (solo usamos para el flag)
+    }));
+
     // ⭐ EXPLICACIÓN: Responder con éxito
     res.json({
       success: true,
-      data: practicas,
+      data: practicasConFlag,
       pagination: {
         total,
         limit: take,

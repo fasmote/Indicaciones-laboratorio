@@ -9,7 +9,53 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased] - Próximas características
 
-## [1.4.0] - 2025-10-08### 🎨 Etapa 6 Completada - Frontend Completo#### ✨ Agregado- **Interfaz web completa** (`public/index.html`):  - Página responsive con diseño moderno  - Buscador de prácticas con autocomplete  - Filtros por área de laboratorio  - Selección múltiple de prácticas  - Generación de indicaciones en tiempo real  - Vista de resultados con resumen y detalles  - Botones de copiar e imprimir- **Estilos CSS** (`public/css/styles.css`):  - Diseño moderno con variables CSS  - Sistema de colores coherente  - Componentes reutilizables (cards, botones, etc.)  - Responsive design (mobile-first)  - Animaciones y transiciones suaves  - Estilos de impresión optimizados  - 700+ líneas de CSS documentado- **Cliente API JavaScript** (`public/js/api.js`):  - Cliente HTTP con fetch() nativo  - Manejo centralizado de errores  - Métodos para todos los endpoints del backend  - Documentación JSDoc completa- **Utilidades JavaScript** (`public/js/utils.js`):  - Toast notifications  - Helpers de formateo  - Funciones de DOM  - Debounce para búsqueda en tiempo real  - Copy to clipboard- **Lógica del Simulador** (`public/js/simulador.js`):  - Controlador principal de la aplicación  - Estado centralizado de la app  - Event handlers organizados  - Búsqueda en tiempo real  - Selección múltiple de prácticas  - Generación de indicaciones  - Vista de resultados  - 600+ líneas de JavaScript documentado#### ✅ Funcionalidades- Búsqueda de prácticas por nombre- Filtros por área (10 áreas disponibles)- Selección/deselección de prácticas- Contadores dinámicos- Generación de indicaciones consolidadas- Resumen de resultados (prácticas, grupos, indicaciones, ayuno)- Copiar indicaciones al portapapeles- Imprimir indicaciones- Toast notifications para feedback- Loading states- Manejo de errores- Responsive design#### 📊 Estado del Proyecto- Etapa 1: Análisis ✅- Etapa 2: Configuración ✅- Etapa 3: Base de datos ✅- Etapa 4: Backend API ✅- Etapa 5: Importación datos reales ✅- **Etapa 6: Frontend ✅ COMPLETADA**- Siguiente: Etapa 7 - Integración y testing---
+## [1.5.0] - 2025-10-09
+
+### 🎯 Mejora UX - Indicadores Visuales de Prácticas
+
+#### ✨ Agregado
+- **Indicador visual de prácticas con/sin indicaciones**:
+  - Badge verde `✓ Con indicaciones` para prácticas que tienen indicaciones configuradas
+  - Badge amarillo `⚠ Sin indicaciones` para prácticas sin indicaciones
+  - Borde izquierdo amarillo para prácticas sin indicaciones
+  - Fondo diferenciado según estado (blanco/amarillo claro)
+
+#### 🔧 Cambiado
+- **Backend** (`src/controllers/practicasController.js`):
+  - API `/api/practicas` ahora incluye flag `tiene_indicaciones` (boolean)
+  - El flag se calcula verificando si la práctica tiene grupos asignados
+  - Query optimizada para incluir relación con grupos
+
+- **Frontend** (`public/js/simulador.js`):
+  - Función `crearItemResultado()` actualizada para mostrar badges
+  - Clase `sin-indicaciones` agregada dinámicamente
+  - Estado de selección ahora guarda el flag `tiene_indicaciones`
+
+- **CSS** (`public/css/styles.css`):
+  - Nuevos estilos para `.badge-indicaciones`, `.badge-si`, `.badge-no`
+  - Estilo `.sin-indicaciones` con borde y fondo amarillo
+  - Layout flexbox mejorado para acomodar badges
+
+#### 📊 Estadísticas
+- 211 prácticas CON indicaciones (24.9%)
+- 635 prácticas SIN indicaciones (75.1%)
+- Script de verificación creado: `scripts/verificar-indicaciones.js`
+
+#### 🐛 Resuelto
+- Issue: Usuarios no sabían qué prácticas tienen indicaciones antes de seleccionarlas
+- Issue: Confusión al generar indicaciones con prácticas sin datos
+- Ahora el usuario ve claramente el estado antes de seleccionar
+
+#### 🎯 Mejora de Experiencia
+- Usuario puede identificar visualmente prácticas útiles
+- Evita frustración al seleccionar prácticas sin indicaciones
+- Información clara y anticipada del contenido
+
+---
+
+## [1.4.0] - 2025-10-08
+
+### 🎨 Etapa 6 Completada - Frontend Completo#### ✨ Agregado- **Interfaz web completa** (`public/index.html`):  - Página responsive con diseño moderno  - Buscador de prácticas con autocomplete  - Filtros por área de laboratorio  - Selección múltiple de prácticas  - Generación de indicaciones en tiempo real  - Vista de resultados con resumen y detalles  - Botones de copiar e imprimir- **Estilos CSS** (`public/css/styles.css`):  - Diseño moderno con variables CSS  - Sistema de colores coherente  - Componentes reutilizables (cards, botones, etc.)  - Responsive design (mobile-first)  - Animaciones y transiciones suaves  - Estilos de impresión optimizados  - 700+ líneas de CSS documentado- **Cliente API JavaScript** (`public/js/api.js`):  - Cliente HTTP con fetch() nativo  - Manejo centralizado de errores  - Métodos para todos los endpoints del backend  - Documentación JSDoc completa- **Utilidades JavaScript** (`public/js/utils.js`):  - Toast notifications  - Helpers de formateo  - Funciones de DOM  - Debounce para búsqueda en tiempo real  - Copy to clipboard- **Lógica del Simulador** (`public/js/simulador.js`):  - Controlador principal de la aplicación  - Estado centralizado de la app  - Event handlers organizados  - Búsqueda en tiempo real  - Selección múltiple de prácticas  - Generación de indicaciones  - Vista de resultados  - 600+ líneas de JavaScript documentado#### ✅ Funcionalidades- Búsqueda de prácticas por nombre- Filtros por área (10 áreas disponibles)- Selección/deselección de prácticas- Contadores dinámicos- Generación de indicaciones consolidadas- Resumen de resultados (prácticas, grupos, indicaciones, ayuno)- Copiar indicaciones al portapapeles- Imprimir indicaciones- Toast notifications para feedback- Loading states- Manejo de errores- Responsive design#### 📊 Estado del Proyecto- Etapa 1: Análisis ✅- Etapa 2: Configuración ✅- Etapa 3: Base de datos ✅- Etapa 4: Backend API ✅- Etapa 5: Importación datos reales ✅- **Etapa 6: Frontend ✅ COMPLETADA**- Siguiente: Etapa 7 - Integración y testing---
 ## [1.3.0] - 2025-10-08
 
 ### 📦 Etapa 5 Completada - Importación de Datos Reales

@@ -303,3 +303,5 @@ screenshots/
 *.png
 *.jpg
 *.jpeg
+# Carpeta de logs temporales
+logs/

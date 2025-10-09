@@ -245,12 +245,26 @@ const Simulador = (() => {
             div.classList.add('selected');
         }
 
+        // ⭐ NUEVO: Agregar clase si NO tiene indicaciones
+        const tieneIndicaciones = practica.tiene_indicaciones;
+        if (!tieneIndicaciones) {
+            div.classList.add('sin-indicaciones');
+        }
+
+        // ⭐ NUEVO: Crear badge de indicador
+        const badge = tieneIndicaciones
+            ? '<span class="badge-indicaciones badge-si" title="Tiene indicaciones configuradas">✓ Con indicaciones</span>'
+            : '<span class="badge-indicaciones badge-no" title="Esta práctica no tiene indicaciones configuradas">⚠ Sin indicaciones</span>';
+
         div.innerHTML = `
-            <div class="result-item-name">${practica.nombre}</div>
-            <div class="result-item-meta">
-                <span class="result-item-area">${practica.area?.nombre || 'Sin área'}</span>
-                <span>Código: ${practica.codigo_did}</span>
+            <div class="result-item-content">
+                <div class="result-item-name">${practica.nombre}</div>
+                <div class="result-item-meta">
+                    <span class="result-item-area">${practica.area?.nombre || 'Sin área'}</span>
+                    <span>Código: ${practica.codigo_did}</span>
+                </div>
             </div>
+            ${badge}
         `;
 
         div.addEventListener('click', () => toggleSeleccion(practica, div));
@@ -280,6 +294,7 @@ const Simulador = (() => {
                 id: practica.id_practica,
                 nombre: practica.nombre,
                 area: practica.area?.nombre || 'Sin área',
+                tiene_indicaciones: practica.tiene_indicaciones || false, // ⭐ NUEVO
             });
             elementoDOM.classList.add('selected');
         }
