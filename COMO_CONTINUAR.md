@@ -240,4 +240,30 @@ indicaciones-app2/
 
 ---
 
-**Última actualización:** 08/10/2025 - 15:20 hs
+---
+
+## 📅 ACTUALIZACIÓN 09/10/2025 - v1.5.0
+
+### ✨ Nueva Funcionalidad: Indicadores Visuales
+
+**Implementado hoy:**
+- Badge verde `✓ Con indicaciones` para prácticas con indicaciones configuradas
+- Badge amarillo `⚠ Sin indicaciones` para prácticas sin indicaciones
+- Borde amarillo y fondo claro para prácticas sin indicaciones
+
+**Problema resuelto:**
+- El 75% de las prácticas (635 de 846) no tienen indicaciones en el Excel original
+- Ahora el usuario ve claramente cuáles tienen indicaciones ANTES de seleccionar
+
+**Probar:**
+1. Buscar "HEMOGRAMA" → verás badge amarillo
+2. Buscar "PARASITO" → verás badge verde
+3. Seleccionar ambas → solo generará indicaciones del parasitológico (esperado)
+
+**Documentación:**
+- Ver `docs/MEJORA_INDICADORES_VISUALES.md` para detalles técnicos
+- Ver `docs/ESTADO_ACTUAL_2025-10-09.md` para estado completo
+
+---
+
+**Última actualización:** 09/10/2025 - 16:45 hs
