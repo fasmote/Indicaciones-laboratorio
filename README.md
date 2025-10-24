@@ -1,8 +1,7 @@
 # Sistema de Indicaciones de Laboratorio
 
 > Sistema web inteligente para generar indicaciones consolidadas de prácticas de laboratorio, resolviendo conflictos y eliminando duplicados automáticamente.
->
-> <img width="825" height="917" alt="image" src="https://github.com/user-attachments/assets/1f5f33b9-9fe7-4705-b4ed-aca3eb32c5e7" />
+
 
 
 <!-- Badges principales -->
@@ -61,7 +60,8 @@ npm start
 ## 📸 Vista Previa
 
 <p align="center">
-  <img src="docs/images/sistema-indicaciones-laboratorio.png" alt="Vista previa del sistema">
+  <img width="825" height="917" alt="image" src="https://github.com/user-attachments/assets/c3e80695-f5b7-4ae5-9c6e-ef9f498fcd19" />
+
   <br>
   <em>Interfaz principal del simulador de indicaciones</em>
 </p>
