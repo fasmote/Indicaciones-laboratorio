@@ -218,6 +218,9 @@ Temporary Items
 # Archivos del Proyecto
 # ====================================
 
+# Claude Code
+.claude/
+
 # Archivos temporales
 temp/
 tmp/
@@ -225,6 +228,7 @@ tmp/
 *.bak
 *.swp
 *~.nib
+*.old
 
 # Archivos de respaldo
 backups/
@@ -243,6 +247,9 @@ data/uploads/
 test-files/
 *.test.db
 
+# Scripts temporales de búsqueda
+scripts/buscar-*.js
+
 # Archivos generados
 build/
 dist/
@@ -252,6 +259,9 @@ public/bundle.js.map
 # ====================================
 # Prisma
 # ====================================
+
+# Directorios duplicados de Prisma
+prisma/prisma/
 
 # Migraciones en desarrollo (opcional - descomenta si no quieres versionar)
 # prisma/migrations/
