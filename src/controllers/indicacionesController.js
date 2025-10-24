@@ -31,11 +31,7 @@ async function obtenerPorId(req, res, next) {
 
 async function crear(req, res, next) {
   try {
-    const { descripcion, texto, tipo, orden } = req.body;
-
-    if (!descripcion || descripcion.trim() === '') {
-      return res.status(400).json({ success: false, error: 'La descripción es requerida' });
-    }
+    const { texto, tipo, orden } = req.body;
 
     if (!texto || texto.trim() === '') {
       return res.status(400).json({ success: false, error: 'El texto es requerido' });
@@ -43,7 +39,6 @@ async function crear(req, res, next) {
 
     const indicacion = await prisma.indicacion.create({
       data: {
-        descripcion: descripcion.trim(),
         texto: texto.trim(),
         tipo: tipo || 'GENERAL',
         orden: orden ? parseInt(orden) : 1,
@@ -60,7 +55,7 @@ async function crear(req, res, next) {
 async function actualizar(req, res, next) {
   try {
     const id = parseInt(req.params.id);
-    const { descripcion, texto, tipo, orden } = req.body;
+    const { texto, tipo, orden } = req.body;
 
     // Verificar que existe
     const existe = await prisma.indicacion.findUnique({
@@ -75,7 +70,6 @@ async function actualizar(req, res, next) {
     const indicacion = await prisma.indicacion.update({
       where: { id_indicacion: id },
       data: {
-        descripcion: descripcion?.trim() || existe.descripcion,
         texto: texto?.trim() || existe.texto,
         tipo: tipo || existe.tipo,
         orden: orden !== undefined ? parseInt(orden) : existe.orden

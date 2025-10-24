@@ -397,24 +397,28 @@ async function cargarIndicaciones() {
             };
             const color = badgeColors[indicacion.tipo] || '#9e9e9e';
 
+            // Crear preview del texto (primeros 80 caracteres)
+            const textoPreview = indicacion.texto.length > 80
+                ? indicacion.texto.substring(0, 80) + '...'
+                : indicacion.texto;
+
             html += `
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div style="flex: 1;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                                <h3 style="margin: 0;">${indicacion.descripcion}</h3>
                                 <span style="background: ${color}; color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
                                     ${indicacion.tipo}
                                 </span>
+                                <span style="color: #999; font-size: 12px;">Orden: ${indicacion.orden}</span>
                             </div>
-                            <p style="margin-bottom: 8px;">${indicacion.texto}</p>
-                            <p style="margin: 0; color: #999; font-size: 12px;">Orden: ${indicacion.orden}</p>
+                            <p style="margin: 0;">${indicacion.texto}</p>
                         </div>
                         <div style="display: flex; gap: 8px; flex-shrink: 0;">
                             <button class="btn btn-info" style="padding: 8px 12px; margin: 0;" onclick="editarIndicacion(${indicacion.id_indicacion})">
                                 ✏️ Editar
                             </button>
-                            <button class="btn" style="padding: 8px 12px; margin: 0; background: #dc3545; color: white;" onclick="eliminarIndicacion(${indicacion.id_indicacion}, '${indicacion.descripcion.replace(/'/g, "\\'")}')">
+                            <button class="btn" style="padding: 8px 12px; margin: 0; background: #dc3545; color: white;" onclick="eliminarIndicacion(${indicacion.id_indicacion}, '${textoPreview.replace(/'/g, "\\'")}')">
                                 🗑️ Eliminar
                             </button>
                         </div>
@@ -435,19 +439,17 @@ async function cargarIndicaciones() {
 
 async function crearIndicacion() {
     try {
-        const descripcion = document.getElementById('indicacion-descripcion').value.trim();
-        const instruccion = document.getElementById('indicacion-instruccion').value.trim();
+        const texto = document.getElementById('indicacion-texto').value.trim();
         const tipo = document.getElementById('indicacion-tipo').value;
         const orden = document.getElementById('indicacion-orden').value;
 
-        if (!descripcion || !instruccion) {
-            alert('Por favor completa la descripción y la instrucción');
+        if (!texto) {
+            alert('Por favor ingresa el texto de la indicación');
             return;
         }
 
         const datos = {
-            descripcion,
-            texto: instruccion,
+            texto,
             tipo,
             orden: parseInt(orden) || 1
         };
@@ -464,8 +466,7 @@ async function crearIndicacion() {
         }
 
         // Limpiar formulario
-        document.getElementById('indicacion-descripcion').value = '';
-        document.getElementById('indicacion-instruccion').value = '';
+        document.getElementById('indicacion-texto').value = '';
         document.getElementById('indicacion-tipo').value = 'AYUNO';
         document.getElementById('indicacion-orden').value = '1';
 
@@ -484,8 +485,7 @@ async function editarIndicacion(id) {
         const indicacion = response.data;
 
         // Llenar formulario
-        document.getElementById('indicacion-descripcion').value = indicacion.descripcion;
-        document.getElementById('indicacion-instruccion').value = indicacion.texto;
+        document.getElementById('indicacion-texto').value = indicacion.texto;
         document.getElementById('indicacion-tipo').value = indicacion.tipo;
         document.getElementById('indicacion-orden').value = indicacion.orden;
 
@@ -510,7 +510,7 @@ async function editarIndicacion(id) {
         }
 
         // Scroll al formulario
-        document.getElementById('indicacion-descripcion').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('indicacion-texto').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
     } catch (error) {
         console.error('Error:', error);
@@ -522,8 +522,7 @@ function cancelarEdicionIndicacion() {
     indicacionEnEdicion = null;
 
     // Limpiar formulario
-    document.getElementById('indicacion-descripcion').value = '';
-    document.getElementById('indicacion-instruccion').value = '';
+    document.getElementById('indicacion-texto').value = '';
     document.getElementById('indicacion-tipo').value = 'AYUNO';
     document.getElementById('indicacion-orden').value = '1';
 
@@ -539,8 +538,8 @@ function cancelarEdicionIndicacion() {
     }
 }
 
-async function eliminarIndicacion(id, descripcion) {
-    if (!confirm(`¿Estás seguro de eliminar la indicación "${descripcion}"?\n\nEsta acción es reversible (eliminación lógica).`)) {
+async function eliminarIndicacion(id, textoPreview) {
+    if (!confirm(`¿Estás seguro de eliminar esta indicación?\n\n"${textoPreview}"\n\nEsta acción es reversible (eliminación lógica).`)) {
         return;
     }
 
