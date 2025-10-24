@@ -1,6 +1,9 @@
 # Sistema de Indicaciones de Laboratorio
 
 > Sistema web inteligente para generar indicaciones consolidadas de prácticas de laboratorio, resolviendo conflictos y eliminando duplicados automáticamente.
+>
+> <img width="825" height="917" alt="image" src="https://github.com/user-attachments/assets/1f5f33b9-9fe7-4705-b4ed-aca3eb32c5e7" />
+
 
 <!-- Badges principales -->
 <p align="center">
