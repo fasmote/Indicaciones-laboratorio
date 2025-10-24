@@ -2,11 +2,68 @@
 
 > Sistema web inteligente para generar indicaciones consolidadas de prácticas de laboratorio, resolviendo conflictos y eliminando duplicados automáticamente.
 
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-[![Express](https://img.shields.io/badge/Express-4.18-blue.svg)](https://expressjs.com/)
-[![Prisma](https://img.shields.io/badge/Prisma-5.7-orange.svg)](https://www.prisma.io/)
-[![SQLite](https://img.shields.io/badge/SQLite-3-lightgrey.svg)](https://www.sqlite.org/)
-[![Versión](https://img.shields.io/badge/Versión-1.6.0-brightgreen.svg)](CHANGELOG.md)
+<!-- Badges principales -->
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.6.0-brightgreen?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/node-%3E%3D18.0.0-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
+  <img src="https://img.shields.io/badge/express-4.18-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express">
+  <img src="https://img.shields.io/badge/prisma-5.7-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma">
+  <img src="https://img.shields.io/badge/sqlite-3-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
+</p>
+
+<!-- Badges de estadísticas -->
+<p align="center">
+  <img src="https://img.shields.io/badge/Prácticas-847-blue?style=flat-square" alt="Prácticas">
+  <img src="https://img.shields.io/badge/Grupos-666-purple?style=flat-square" alt="Grupos">
+  <img src="https://img.shields.io/badge/Indicaciones-140-orange?style=flat-square" alt="Indicaciones">
+  <img src="https://img.shields.io/badge/Cobertura-96.9%25-success?style=flat-square" alt="Cobertura">
+  <img src="https://img.shields.io/badge/Endpoints-15+-informational?style=flat-square" alt="API Endpoints">
+</p>
+
+<!-- Badges de tecnología -->
+<p align="center">
+  <img src="https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?style=flat&logo=javascript&logoColor=black" alt="JavaScript">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white" alt="HTML5">
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white" alt="CSS3">
+  <img src="https://img.shields.io/badge/REST_API-02569B?style=flat" alt="REST API">
+  <img src="https://img.shields.io/badge/MVC-Architecture-blueviolet?style=flat" alt="MVC">
+</p>
+
+---
+
+## 🚀 Quick Start
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/fasmote/Indicaciones-laboratorio.git
+cd Indicaciones-laboratorio
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Generar cliente Prisma
+npx prisma generate
+
+# 4. Iniciar el servidor
+npm start
+
+# 5. Abrir en el navegador
+# http://localhost:3001
+```
+
+> 💡 **Nota**: La base de datos SQLite ya viene preconfigurada con 847 prácticas y 140 indicaciones.
+
+---
+
+## 📸 Vista Previa
+
+<p align="center">
+  <img src="https://via.placeholder.com/800x450/667eea/ffffff?text=Sistema+de+Indicaciones+de+Laboratorio" alt="Vista previa del sistema">
+  <br>
+  <em>Interfaz principal del simulador de indicaciones</em>
+</p>
+
+> 📝 **Para agregar tu screenshot**: Reemplaza el URL de la imagen con tu captura de pantalla real del sistema.
 
 ---
 
@@ -840,27 +897,73 @@ Las contribuciones son bienvenidas. Por favor:
 
 ---
 
-## Licencia
+## 🤝 Contribuciones
 
-Este proyecto está bajo la Licencia **MIT**. Ver archivo [LICENSE](LICENSE) para más detalles.
+Las contribuciones son bienvenidas! Si quieres mejorar este proyecto:
+
+1. **Fork** el repositorio
+2. Crea una **rama** para tu feature (`git checkout -b feature/AmazingFeature`)
+3. **Commit** tus cambios (`git commit -m 'Add: AmazingFeature'`)
+4. **Push** a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un **Pull Request**
+
+### Áreas de Mejora
+
+- [ ] Agregar autenticación de usuarios
+- [ ] Implementar generación de PDF de indicaciones
+- [ ] Agregar internacionalización (i18n)
+- [ ] Crear dashboard de estadísticas
+- [ ] Implementar caché de consultas frecuentes
+- [ ] Agregar tests unitarios y de integración
 
 ---
 
-## Contacto
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia **MIT**. Ver archivo [LICENSE](LICENSE) para más detalles.
+
+```
+MIT License - Copyright (c) 2025
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files...
+```
+
+---
+
+## 📞 Contacto
+
+<p align="center">
+  <a href="https://github.com/fasmote/Indicaciones-laboratorio">
+    <img src="https://img.shields.io/badge/GitHub-Repo-181717?style=for-the-badge&logo=github" alt="GitHub">
+  </a>
+  <a href="https://github.com/fasmote/Indicaciones-laboratorio/issues">
+    <img src="https://img.shields.io/badge/Issues-Report-red?style=for-the-badge&logo=github" alt="Issues">
+  </a>
+  <a href="https://github.com/fasmote">
+    <img src="https://img.shields.io/badge/Author-fasmote-blue?style=for-the-badge&logo=github" alt="Author">
+  </a>
+</p>
 
 **Proyecto**: Sistema de Indicaciones de Laboratorio
 **Versión**: 1.6.0
 **Última actualización**: 24/10/2025
-**Repositorio**: [https://github.com/tu-usuario/indicaciones-app2](https://github.com/tu-usuario/indicaciones-app2)
+**Repositorio**: [https://github.com/fasmote/Indicaciones-laboratorio](https://github.com/fasmote/Indicaciones-laboratorio)
 
 ---
 
-## Agradecimientos
+## 🙏 Agradecimientos
 
 - **Fuente de datos**: Red de Laboratorios - Tabla de indicaciones actualizada 2024
-- **Tecnologías**: Node.js, Express, Prisma, SQLite
-- **Desarrollado con**: Claude Code (Anthropic)
+- **Stack tecnológico**: Node.js, Express, Prisma, SQLite
+- **Diagramas**: Mermaid.js para visualización interactiva
+- **Desarrollado con**: [Claude Code](https://claude.com/claude-code) (Anthropic)
 
 ---
 
-**Generado con ❤️ para mejorar la atención al paciente en laboratorios clínicos**
+<p align="center">
+  <strong>Generado con ❤️ para mejorar la atención al paciente en laboratorios clínicos</strong>
+  <br><br>
+  <img src="https://img.shields.io/badge/Made%20with-Node.js-339933?style=flat&logo=node.js&logoColor=white" alt="Made with Node.js">
+  <img src="https://img.shields.io/badge/Built%20by-Claude%20Code-7C3AED?style=flat" alt="Built by Claude Code">
+</p>
