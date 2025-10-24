@@ -229,6 +229,45 @@ const API = (() => {
         },
 
         /**
+         * Actualizar un grupo
+         * PUT /api/grupos/:id
+         *
+         * @param {number} id - ID del grupo
+         * @param {object} grupo - Datos a actualizar
+         * @returns {Promise<object>} - { success, data }
+         */
+        actualizarGrupo: async (id, grupo) => {
+            return request(`/grupos/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify(grupo),
+            });
+        },
+
+        /**
+         * Eliminar un grupo (eliminación lógica)
+         * DELETE /api/grupos/:id
+         *
+         * @param {number} id - ID del grupo
+         * @returns {Promise<object>} - { success, message }
+         */
+        eliminarGrupo: async (id) => {
+            return request(`/grupos/${id}`, {
+                method: 'DELETE',
+            });
+        },
+
+        /**
+         * Obtener una indicación por ID
+         * GET /api/indicaciones/:id
+         *
+         * @param {number} id - ID de la indicación
+         * @returns {Promise<object>} - { success, data }
+         */
+        obtenerIndicacion: async (id) => {
+            return request(`/indicaciones/${id}`);
+        },
+
+        /**
          * Crear una nueva indicación
          * POST /api/indicaciones
          *
@@ -239,6 +278,34 @@ const API = (() => {
             return request('/indicaciones', {
                 method: 'POST',
                 body: JSON.stringify(indicacion),
+            });
+        },
+
+        /**
+         * Actualizar una indicación
+         * PUT /api/indicaciones/:id
+         *
+         * @param {number} id - ID de la indicación
+         * @param {object} indicacion - Datos a actualizar
+         * @returns {Promise<object>} - { success, data }
+         */
+        actualizarIndicacion: async (id, indicacion) => {
+            return request(`/indicaciones/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify(indicacion),
+            });
+        },
+
+        /**
+         * Eliminar una indicación (eliminación lógica)
+         * DELETE /api/indicaciones/:id
+         *
+         * @param {number} id - ID de la indicación
+         * @returns {Promise<object>} - { success, message }
+         */
+        eliminarIndicacion: async (id) => {
+            return request(`/indicaciones/${id}`, {
+                method: 'DELETE',
             });
         },
 
