@@ -455,12 +455,12 @@ fetch('http://localhost:3000/api/practicas')
 
 El sistema utiliza **7 tablas principales**:
 
-1. **AREA**: Áreas del laboratorio (Virología, Química, etc.)
-2. **PRACTICA**: Catálogo de prácticas de laboratorio (852 prácticas)
-3. **GRUPO**: Grupos de indicaciones semánticamente iguales (62 grupos)
-4. **INDICACION**: Indicaciones atómicas reutilizables
-5. **PRACTICA_GRUPO**: Relación M:N entre Prácticas y Grupos
-6. **GRUPO_INDICACION**: Relación M:N entre Grupos e Indicaciones
+1. **AREA**: Áreas del laboratorio (10 áreas)
+2. **PRACTICA**: Catálogo de prácticas de laboratorio (847 prácticas)
+3. **GRUPO**: Grupos de indicaciones semánticamente iguales (666 grupos)
+4. **INDICACION**: Indicaciones atómicas reutilizables (140 indicaciones)
+5. **PRACTICA_GRUPO**: Relación M:N entre Prácticas y Grupos (821 relaciones - 96.9% cobertura)
+6. **GRUPO_INDICACION**: Relación M:N entre Grupos e Indicaciones (767 relaciones)
 7. **REGLA_ALTERNATIVA**: Reglas especiales cuando se combinan prácticas
 
 ### Diagrama ER
@@ -594,10 +594,12 @@ La documentación completa del proyecto se encuentra en la carpeta `docs/`:
 
 ## 📊 Estadísticas del Proyecto
 
-- **Prácticas de laboratorio**: 852
-- **Grupos de indicaciones**: 62
+- **Prácticas de laboratorio**: 847
+- **Grupos de indicaciones**: 666
+- **Indicaciones individuales**: 140
 - **Áreas de laboratorio**: 10
-- **Líneas de código**: ~5000 (backend + frontend)
+- **Cobertura de datos**: 96.9% (821/847 prácticas con indicaciones)
+- **Líneas de código**: ~6000 (backend + frontend + scripts)
 - **Endpoints de API**: 15+
 
 ---
@@ -637,8 +639,8 @@ Ver el archivo [LICENSE](LICENSE) para más detalles.
 
 **Proyecto**: Sistema de Indicaciones de Laboratorio
 **Repositorio**: [https://github.com/tu-usuario/indicaciones-app2](https://github.com/tu-usuario/indicaciones-app2)
-**Versión**: 1.0.0
-**Fecha**: Octubre 2025
+**Versión**: 1.6.0
+**Última actualización**: 24/10/2025
 
 ---
 

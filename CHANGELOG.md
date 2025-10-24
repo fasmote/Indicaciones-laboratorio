@@ -9,6 +9,83 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Unreleased] - Próximas características
 
+## [1.6.0] - 2025-10-24
+
+### 🎉 Reimportación Completa con Datos de Ayuno y Orina
+
+#### ✨ Agregado
+- **Script de reimportación mejorado** (`scripts/reimportar-completo.js`):
+  - Importación desde Excel **[REVISAR]** (versión completa con atributos)
+  - **PASO 5B**: Procesamiento de hoja **PracticasAtributos** (50,499 registros)
+  - Creación automática de grupos con atributos de ayuno/orina
+  - Manejo de duplicados en prácticas
+  - 847 prácticas importadas (5 duplicadas ignoradas)
+  - 666 grupos creados (57 con indicaciones textuales + 609 con atributos)
+  - 140 indicaciones individuales
+  - 821 prácticas (96.9%) con grupos asignados
+  - 767 relaciones grupo-indicación
+
+- **Scripts de verificación**:
+  - `scripts/verificar-hemograma.js` - Verificación detallada de HEMOGRAMA
+  - `scripts/buscar-todas-parasito.js` - Búsqueda de prácticas parasitológicas
+  - `scripts/verificar-parasito.js` - Verificación de estudio parasitológico
+
+#### 🔧 Cambiado
+- **Ruta del Excel**: Cambiada de `[ORIGINAL]` a `[REVISAR]` para incluir todos los atributos
+- **Algoritmo de importación**:
+  - Paso 5: Importa grupos desde indicaciones textuales
+  - **Paso 5B (NUEVO)**: Importa grupos desde atributos de ayuno/orina
+  - Solo procesa prácticas sin grupos en Paso 5B (evita duplicados)
+
+- **Frontend** (`public/js/tabs.js`):
+  - Avisos visuales cuando no hay indicaciones/ayuno/orina:
+    - Mensaje amarillo si NO hay ningún dato configurado
+    - Mensaje específico si solo hay ayuno u orina sin indicaciones
+
+#### 🐛 Resuelto
+- **HEMOGRAMA sin ayuno** - SOLUCIONADO ✅:
+  - Antes: 0 grupos, sin indicaciones
+  - Ahora: 1 grupo, 8 horas de ayuno, indicación "Concurrir al Laboratorio con 8 hs de ayuno"
+
+- **ESTUDIO PARASITOLÓGICO SERIADO** - VERIFICADO ✅:
+  - 1 grupo asignado
+  - 1 indicación completa sobre recolección durante 7 días
+
+- **Cobertura de datos mejorada**:
+  - Antes: 211 prácticas (24.9%) con datos
+  - Ahora: 821 prácticas (96.9%) con datos
+  - Mejora: +610 prácticas (+72%)
+
+#### 📊 Estadísticas Finales
+- **Base de datos**:
+  - 10 áreas
+  - 847 prácticas
+  - 666 grupos (↑ 610 nuevos desde atributos)
+  - 140 indicaciones (↑ 4 nuevas)
+  - 821 relaciones práctica-grupo (↑ 610)
+  - 767 relaciones grupo-indicación (↑ 627)
+
+- **Tipos de indicaciones procesadas**:
+  - AYUNO: Extraídas de columna `ayuno_desc`
+  - ORINA: Extraídas de columna `orina_desc`
+  - GENERAL: Desde indicaciones textuales
+  - HORARIO: Desde indicaciones textuales
+  - MEDICACION: Desde indicaciones textuales
+
+#### 🎯 Mejora de Experiencia
+- Usuario ahora ve mensajes claros cuando:
+  - Una práctica no tiene datos configurados
+  - Una práctica solo requiere ayuno sin otras indicaciones
+  - Una práctica solo requiere orina sin otras indicaciones
+- Ayuda a entender por qué algunas prácticas no generan texto de indicaciones
+
+#### 🔄 Compatibilidad
+- Base de datos SQLite actualizada con datos completos
+- API funciona con 96.9% de prácticas configuradas
+- Frontend muestra avisos informativos para el 3.1% restante
+
+---
+
 ## [1.5.0] - 2025-10-09
 
 ### 🎯 Mejora UX - Indicadores Visuales de Prácticas
