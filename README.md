@@ -134,13 +134,116 @@ RESUMEN:
 - **Repository Pattern**: Acceso a datos mediante Prisma ORM
 - **Singleton**: Cliente de Prisma único en toda la aplicación
 
+### Flujo de Consolidación de Indicaciones
+
+```mermaid
+flowchart TD
+    A[Usuario selecciona prácticas] --> B[POST /api/simulador/generar]
+    B --> C{¿Prácticas válidas?}
+    C -->|No| D[Error: Prácticas inválidas]
+    C -->|Sí| E[Obtener grupos de cada práctica]
+    E --> F[Recolectar todas las indicaciones]
+    F --> G{¿Hay indicaciones?}
+    G -->|No| H[Error: Sin indicaciones]
+    G -->|Sí| I[Consolidar indicaciones por tipo]
+    I --> J[Eliminar duplicados]
+    J --> K[Aplicar reglas de prioridad]
+    K --> L[Calcular ayuno máximo]
+    L --> M[Ordenar por tipo y orden]
+    M --> N[Retornar indicaciones consolidadas]
+
+    style A fill:#667eea,color:#fff
+    style N fill:#28a745,color:#fff
+    style D fill:#dc3545,color:#fff
+    style H fill:#dc3545,color:#fff
+```
+
+#### Algoritmo de Consolidación
+
+1. **Recolección**: Obtener todas las indicaciones de los grupos asociados a las prácticas seleccionadas
+2. **Deduplicación**: Eliminar indicaciones idénticas (mismo texto)
+3. **Priorización**: Aplicar reglas de prioridad (si existe `id_indicacion_prioridad`)
+4. **Ayuno Máximo**: Seleccionar el mayor tiempo de ayuno entre todos los grupos
+5. **Ordenamiento**: Por tipo (AYUNO → HORARIO → MEDICACION → ORINA → GENERAL) y luego por orden
+
 ---
 
 ## Base de Datos
 
-### Modelo Entidad-Relación (MER)
+### Diagrama Entidad-Relación (DER)
 
-El sistema está diseñado con **7 tablas principales** que manejan relaciones M:N (muchos a muchos):
+El sistema está diseñado con **7 tablas principales** que manejan relaciones M:N (muchos a muchos).
+
+#### Diagrama ER Interactivo (Mermaid)
+
+```mermaid
+erDiagram
+    AREA ||--o{ PRACTICA : "contiene"
+    PRACTICA ||--o{ PRACTICA_GRUPO : "tiene"
+    GRUPO ||--o{ PRACTICA_GRUPO : "pertenece"
+    GRUPO ||--o{ GRUPO_INDICACION : "tiene"
+    INDICACION ||--o{ GRUPO_INDICACION : "pertenece"
+    INDICACION ||--o| INDICACION : "prioriza"
+
+    AREA {
+        int id_area PK
+        string nombre
+        string descripcion
+        boolean activo
+        datetime fechaCreacion
+        datetime fechaModificacion
+    }
+
+    PRACTICA {
+        int id_practica PK
+        string codigo_did UK "Código SNOMED"
+        string nombre
+        int id_area FK
+        boolean activo
+        datetime fechaCreacion
+        datetime fechaModificacion
+    }
+
+    GRUPO {
+        int id_grupo PK
+        string nombre
+        string descripcion
+        int horas_ayuno "3, 4, 8, 12"
+        string tipo_orina "PRIMERA_MANANA, 12H, 24H, 2H"
+        int horas_orina
+        boolean activo
+        datetime fechaCreacion
+        datetime fechaModificacion
+    }
+
+    PRACTICA_GRUPO {
+        int id_practica PK_FK
+        int id_grupo PK_FK
+        boolean activo
+        datetime fechaCreacion
+    }
+
+    INDICACION {
+        int id_indicacion PK
+        string texto "Texto de la indicación"
+        string tipo "AYUNO, ORINA, GENERAL, etc"
+        int orden
+        int id_indicacion_prioridad FK "Auto-referencia"
+        boolean activo
+        datetime fechaCreacion
+        datetime fechaModificacion
+    }
+
+    GRUPO_INDICACION {
+        int id_grupo PK_FK
+        int id_indicacion PK_FK
+        int orden
+        boolean activo
+        datetime fechaCreacion
+    }
+```
+
+#### Modelo Entidad-Relación (MER) - Vista ASCII
 
 ```
 ┌─────────┐       ┌──────────────────┐       ┌─────────┐
