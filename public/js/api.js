@@ -213,6 +213,39 @@ const API = (() => {
                 method: 'DELETE',
             });
         },
+
+        /**
+         * Crear un nuevo grupo
+         * POST /api/grupos
+         *
+         * @param {object} grupo - Datos del grupo
+         * @returns {Promise<object>} - { success, data }
+         */
+        crearGrupo: async (grupo) => {
+            return request('/grupos', {
+                method: 'POST',
+                body: JSON.stringify(grupo),
+            });
+        },
+
+        /**
+         * Crear una nueva indicación
+         * POST /api/indicaciones
+         *
+         * @param {object} indicacion - Datos de la indicación
+         * @returns {Promise<object>} - { success, data }
+         */
+        crearIndicacion: async (indicacion) => {
+            return request('/indicaciones', {
+                method: 'POST',
+                body: JSON.stringify(indicacion),
+            });
+        },
+
+        /**
+         * Exponer request para casos especiales
+         */
+        request: request,
     };
 })();
 

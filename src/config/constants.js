@@ -133,7 +133,7 @@ const LIMITES = {
   MAX_LONGITUD_NOMBRE: 500,
   MAX_LONGITUD_DESCRIPCION: 5000,
   PAGINACION_DEFAULT: 20, // Resultados por página por defecto
-  PAGINACION_MAX: 100 // Máximo de resultados por página
+  PAGINACION_MAX: 10000 // Máximo de resultados por página
 };
 
 // ====================================
