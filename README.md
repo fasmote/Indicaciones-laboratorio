@@ -58,12 +58,10 @@ npm start
 ## 📸 Vista Previa
 
 <p align="center">
-  <img src="https://via.placeholder.com/800x450/667eea/ffffff?text=Sistema+de+Indicaciones+de+Laboratorio" alt="Vista previa del sistema">
+  <img src="docs/images/sistema-indicaciones-laboratorio.png" alt="Vista previa del sistema">
   <br>
   <em>Interfaz principal del simulador de indicaciones</em>
 </p>
-
-> 📝 **Para agregar tu screenshot**: Reemplaza el URL de la imagen con tu captura de pantalla real del sistema.
 
 ---
 
@@ -784,14 +782,20 @@ indicaciones-app2/
 - [x] Desarrollo del frontend completo
 - [x] Reimportación con atributos de ayuno/orina
 - [x] Avisos visuales para prácticas sin datos
+- [x] ABM completo de Prácticas (crear, editar, eliminar)
+- [x] ABM completo de Grupos (crear, editar, eliminar)
+- [x] ABM completo de Indicaciones (crear, editar, eliminar)
 
 ### Próximas Versiones
 
-#### v1.7.0 - Interfaz de Gestión
-- [ ] ABM completo de Prácticas
-- [ ] ABM completo de Grupos
-- [ ] ABM completo de Indicaciones
-- [ ] Edición visual de relaciones
+#### v1.7.0 - Gestión de Relaciones (Próximamente)
+- [ ] **Asignar Prácticas a Grupos** - Interfaz para asociar prácticas existentes con grupos
+- [ ] **Asignar Indicaciones a Grupos** - Gestión de relaciones grupo-indicación
+- [ ] **Cambiar Grupos de Prácticas** - Mover prácticas entre grupos
+- [ ] **Cambiar Grupos de Indicaciones** - Reasignar indicaciones
+- [ ] **Editor Visual de Relaciones** - Drag & drop para gestionar asociaciones
+- [ ] **Previsualización de Cambios** - Ver cómo afectan las modificaciones antes de guardar
+- [ ] **Historial de Cambios** - Registro de modificaciones en relaciones
 
 #### v1.8.0 - Testing
 - [ ] Tests unitarios (Jest)
@@ -909,12 +913,14 @@ Las contribuciones son bienvenidas! Si quieres mejorar este proyecto:
 
 ### Áreas de Mejora
 
-- [ ] Agregar autenticación de usuarios
+- [ ] **Gestión de Relaciones** - Asignar prácticas/indicaciones a grupos, editor visual
+- [ ] Agregar autenticación de usuarios y roles
 - [ ] Implementar generación de PDF de indicaciones
 - [ ] Agregar internacionalización (i18n)
-- [ ] Crear dashboard de estadísticas
+- [ ] Crear dashboard de estadísticas y reportes
 - [ ] Implementar caché de consultas frecuentes
 - [ ] Agregar tests unitarios y de integración
+- [ ] Sistema de versionado de datos (audit log)
 
 ---
 

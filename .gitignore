@@ -313,5 +313,10 @@ screenshots/
 *.png
 *.jpg
 *.jpeg
+
+# Excepción: Permitir screenshots en docs/images/
+!docs/images/*.png
+!docs/images/*.jpg
+!docs/images/*.jpeg
 # Carpeta de logs temporales
 logs/
