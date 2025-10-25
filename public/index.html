@@ -406,6 +406,7 @@
             <button class="tab" onclick="showTab('practicas')">📋 Prácticas</button>
             <button class="tab" onclick="showTab('grupos')">📁 Grupos</button>
             <button class="tab" onclick="showTab('indicaciones')">📝 Indicaciones</button>
+            <button class="tab" onclick="showTab('relaciones')">🔗 Relaciones</button>
         </div>
 
         <!-- Tab: Simulador -->
@@ -592,11 +593,78 @@
                 </div>
             </div>
         </div>
+
+        <!-- Tab: Relaciones -->
+        <div id="relaciones" class="tab-content">
+            <div class="section">
+                <h2>🔗 Gestión de Relaciones</h2>
+                <p style="margin-bottom: 20px; color: #666;">
+                    Asigna prácticas e indicaciones a grupos para establecer las relaciones necesarias.
+                </p>
+
+                <!-- Selector de Grupo -->
+                <div class="form-group">
+                    <label>Selecciona un Grupo:</label>
+                    <select id="rel-grupo-select" onchange="cargarRelacionesDelGrupo()" style="font-size: 14px;">
+                        <option value="">-- Selecciona un grupo --</option>
+                    </select>
+                </div>
+
+                <div id="relaciones-content" style="display: none;">
+                    <!-- Panel de Indicaciones del Grupo -->
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3 style="margin-top: 0;">📝 Indicaciones del Grupo</h3>
+
+                        <div class="form-group">
+                            <label>Agregar Indicación:</label>
+                            <select id="rel-indicacion-select">
+                                <option value="">-- Selecciona una indicación --</option>
+                            </select>
+                            <input type="number" id="rel-indicacion-orden" min="1" max="100" value="1"
+                                   placeholder="Orden" style="width: 80px; margin-left: 10px;">
+                            <button class="btn btn-success" onclick="agregarIndicacionAGrupo()" style="margin-left: 10px;">
+                                ➕ Agregar
+                            </button>
+                        </div>
+
+                        <div id="grupo-indicaciones-list" style="margin-top: 15px;">
+                            <div class="loading">Cargando indicaciones del grupo...</div>
+                        </div>
+                    </div>
+
+                    <!-- Panel de Prácticas del Grupo -->
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <h3 style="margin-top: 0;">📋 Prácticas del Grupo</h3>
+
+                        <div class="form-group">
+                            <label>Buscar Práctica:</label>
+                            <input type="text" id="rel-practica-buscar" placeholder="Buscar por código o nombre..."
+                                   onkeyup="buscarPracticasParaRelacion()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Agregar Práctica:</label>
+                            <select id="rel-practica-select">
+                                <option value="">-- Selecciona una práctica --</option>
+                            </select>
+                            <button class="btn btn-success" onclick="agregarPracticaAGrupo()" style="margin-left: 10px;">
+                                ➕ Agregar
+                            </button>
+                        </div>
+
+                        <div id="grupo-practicas-list" style="margin-top: 15px;">
+                            <div class="loading">Cargando prácticas del grupo...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script src="/js/api.js?v=3"></script>
+    <script src="/js/api.js?v=4"></script>
     <script src="/js/utils.js?v=2"></script>
     <script src="/js/tabs.js?v=2"></script>
     <script src="/js/crud.js?v=1"></script>
+    <script src="/js/relaciones.js?v=1"></script>
 </body>
 </html>

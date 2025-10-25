@@ -309,6 +309,69 @@ const API = (() => {
             });
         },
 
+        // ============================================
+        // GESTIÓN DE RELACIONES
+        // ============================================
+
+        /**
+         * Agregar indicación a un grupo
+         * POST /api/grupos/:id/indicaciones
+         *
+         * @param {number} idGrupo - ID del grupo
+         * @param {number} idIndicacion - ID de la indicación
+         * @param {number} orden - Orden de la indicación (opcional)
+         * @returns {Promise<object>} - { success, data }
+         */
+        agregarIndicacionAGrupo: async (idGrupo, idIndicacion, orden = 1) => {
+            return request(`/grupos/${idGrupo}/indicaciones`, {
+                method: 'POST',
+                body: JSON.stringify({ id_indicacion: idIndicacion, orden }),
+            });
+        },
+
+        /**
+         * Remover indicación de un grupo
+         * DELETE /api/grupos/:id/indicaciones/:idIndicacion
+         *
+         * @param {number} idGrupo - ID del grupo
+         * @param {number} idIndicacion - ID de la indicación
+         * @returns {Promise<object>} - { success, message }
+         */
+        removerIndicacionDeGrupo: async (idGrupo, idIndicacion) => {
+            return request(`/grupos/${idGrupo}/indicaciones/${idIndicacion}`, {
+                method: 'DELETE',
+            });
+        },
+
+        /**
+         * Agregar práctica a un grupo
+         * POST /api/grupos/:id/practicas
+         *
+         * @param {number} idGrupo - ID del grupo
+         * @param {number} idPractica - ID de la práctica
+         * @returns {Promise<object>} - { success, data }
+         */
+        agregarPracticaAGrupo: async (idGrupo, idPractica) => {
+            return request(`/grupos/${idGrupo}/practicas`, {
+                method: 'POST',
+                body: JSON.stringify({ id_practica: idPractica }),
+            });
+        },
+
+        /**
+         * Remover práctica de un grupo
+         * DELETE /api/grupos/:id/practicas/:idPractica
+         *
+         * @param {number} idGrupo - ID del grupo
+         * @param {number} idPractica - ID de la práctica
+         * @returns {Promise<object>} - { success, message }
+         */
+        removerPracticaDeGrupo: async (idGrupo, idPractica) => {
+            return request(`/grupos/${idGrupo}/practicas/${idPractica}`, {
+                method: 'DELETE',
+            });
+        },
+
         /**
          * Exponer request para casos especiales
          */

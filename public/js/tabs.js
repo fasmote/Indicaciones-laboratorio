@@ -55,6 +55,11 @@ function showTab(tabName) {
         case 'indicaciones':
             cargarIndicaciones();
             break;
+        case 'relaciones':
+            if (typeof inicializarRelaciones === 'function') {
+                inicializarRelaciones();
+            }
+            break;
     }
 }
 
