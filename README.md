@@ -6,7 +6,7 @@
 
 <!-- Badges principales -->
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.6.0-brightgreen?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.7.0-brightgreen?style=for-the-badge" alt="Version">
   <img src="https://img.shields.io/badge/node-%3E%3D18.0.0-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
   <img src="https://img.shields.io/badge/express-4.18-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express">
   <img src="https://img.shields.io/badge/prisma-5.7-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma">
@@ -774,7 +774,7 @@ indicaciones-app2/
 
 ## Roadmap
 
-### Versión Actual: 1.6.0 ✅
+### Versión Actual: 1.7.0 ✅
 
 - [x] Análisis del modelo de datos
 - [x] Diseño de arquitectura
@@ -788,17 +788,20 @@ indicaciones-app2/
 - [x] ABM completo de Prácticas (crear, editar, eliminar)
 - [x] ABM completo de Grupos (crear, editar, eliminar)
 - [x] ABM completo de Indicaciones (crear, editar, eliminar)
+- [x] **Gestión de Relaciones** - Nueva pestaña "🔗 Relaciones"
+- [x] **Asignar Prácticas a Grupos** - Con búsqueda en tiempo real
+- [x] **Asignar Indicaciones a Grupos** - Con configuración de orden
+- [x] **Remover Relaciones** - Soft delete con confirmación
+- [x] **Buscadores Inteligentes** - Filtrado desde el primer carácter
 
 ### Próximas Versiones
 
-#### v1.7.0 - Gestión de Relaciones (Próximamente)
-- [ ] **Asignar Prácticas a Grupos** - Interfaz para asociar prácticas existentes con grupos
-- [ ] **Asignar Indicaciones a Grupos** - Gestión de relaciones grupo-indicación
-- [ ] **Cambiar Grupos de Prácticas** - Mover prácticas entre grupos
-- [ ] **Cambiar Grupos de Indicaciones** - Reasignar indicaciones
+#### v1.8.0 - Mejoras de UX (Próximamente)
 - [ ] **Editor Visual de Relaciones** - Drag & drop para gestionar asociaciones
 - [ ] **Previsualización de Cambios** - Ver cómo afectan las modificaciones antes de guardar
 - [ ] **Historial de Cambios** - Registro de modificaciones en relaciones
+- [ ] **Cambio Masivo de Grupos** - Reasignar múltiples prácticas/indicaciones a la vez
+- [ ] **Exportar/Importar Relaciones** - Backup y restauración de configuración
 
 #### v1.8.0 - Testing
 - [ ] Tests unitarios (Jest)
