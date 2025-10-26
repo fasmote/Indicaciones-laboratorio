@@ -66,7 +66,7 @@ function actualizarSelectGrupos(filtrados = null) {
 function buscarGruposParaRelacion() {
     const termino = document.getElementById('rel-grupo-buscar').value.trim().toLowerCase();
 
-    if (termino.length < 2) {
+    if (termino === '') {
         actualizarSelectGrupos();
         return;
     }
@@ -118,7 +118,7 @@ function actualizarSelectPracticas(filtradas = null) {
 async function buscarPracticasParaRelacion() {
     const termino = document.getElementById('rel-practica-buscar').value.trim();
 
-    if (termino.length < 2) {
+    if (termino === '') {
         actualizarSelectPracticas();
         return;
     }
