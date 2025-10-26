@@ -11,6 +11,7 @@
  */
 
 let grupoSeleccionado = null;
+let todosLosGrupos = [];
 let todasLasIndicaciones = [];
 let todasLasPracticas = [];
 
@@ -21,17 +22,9 @@ async function inicializarRelaciones() {
     try {
         // Cargar grupos en el selector
         const responseGrupos = await API.listarGrupos();
-        const grupos = responseGrupos.data;
+        todosLosGrupos = responseGrupos.data;
 
-        const selectGrupo = document.getElementById('rel-grupo-select');
-        selectGrupo.innerHTML = '<option value="">-- Selecciona un grupo --</option>';
-
-        grupos.forEach(grupo => {
-            const option = document.createElement('option');
-            option.value = grupo.id_grupo;
-            option.textContent = `${grupo.nombre}${grupo.horas_ayuno ? ` (${grupo.horas_ayuno}h ayuno)` : ''}`;
-            selectGrupo.appendChild(option);
-        });
+        actualizarSelectGrupos();
 
         // Cargar todas las indicaciones
         const responseIndicaciones = await API.listarIndicaciones();
@@ -48,6 +41,42 @@ async function inicializarRelaciones() {
         console.error('Error al inicializar relaciones:', error);
         alert('❌ Error al cargar datos: ' + error.message);
     }
+}
+
+/**
+ * Actualizar el selector de grupos
+ */
+function actualizarSelectGrupos(filtrados = null) {
+    const select = document.getElementById('rel-grupo-select');
+    select.innerHTML = '<option value="">-- Selecciona un grupo --</option>';
+
+    const grupos = filtrados || todosLosGrupos;
+
+    grupos.forEach(grupo => {
+        const option = document.createElement('option');
+        option.value = grupo.id_grupo;
+        option.textContent = `${grupo.nombre}${grupo.horas_ayuno ? ` (${grupo.horas_ayuno}h ayuno)` : ''}`;
+        select.appendChild(option);
+    });
+}
+
+/**
+ * Buscar grupos por término
+ */
+function buscarGruposParaRelacion() {
+    const termino = document.getElementById('rel-grupo-buscar').value.trim().toLowerCase();
+
+    if (termino.length < 2) {
+        actualizarSelectGrupos();
+        return;
+    }
+
+    const gruposFiltrados = todosLosGrupos.filter(grupo =>
+        grupo.nombre.toLowerCase().includes(termino) ||
+        (grupo.descripcion && grupo.descripcion.toLowerCase().includes(termino))
+    );
+
+    actualizarSelectGrupos(gruposFiltrados);
 }
 
 /**
