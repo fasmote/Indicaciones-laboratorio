@@ -52,6 +52,8 @@ function actualizarSelectGrupos(filtrados = null) {
 
     const grupos = filtrados || todosLosGrupos;
 
+    console.log('[DEBUG] actualizarSelectGrupos - grupos a mostrar:', grupos.length);
+
     // Construir opciones HTML
     let html = '<option value="">-- Selecciona un grupo --</option>';
     grupos.forEach(grupo => {
@@ -60,6 +62,7 @@ function actualizarSelectGrupos(filtrados = null) {
 
     // Actualizar con innerHTML
     select.innerHTML = html;
+    console.log('[DEBUG] Select actualizado con', select.options.length, 'opciones');
 
     // Restaurar selección si aún existe
     if (valorActual && grupos.some(g => g.id_grupo == valorActual)) {
@@ -72,8 +75,11 @@ function actualizarSelectGrupos(filtrados = null) {
  */
 function buscarGruposParaRelacion() {
     const termino = document.getElementById('rel-grupo-buscar').value.trim().toLowerCase();
+    console.log('[DEBUG] Buscando grupos con término:', termino);
+    console.log('[DEBUG] Total de grupos disponibles:', todosLosGrupos.length);
 
     if (termino === '') {
+        console.log('[DEBUG] Término vacío, mostrando todos los grupos');
         actualizarSelectGrupos();
         return;
     }
@@ -83,6 +89,7 @@ function buscarGruposParaRelacion() {
         (grupo.descripcion && grupo.descripcion.toLowerCase().includes(termino))
     );
 
+    console.log('[DEBUG] Grupos filtrados encontrados:', gruposFiltrados.length);
     actualizarSelectGrupos(gruposFiltrados);
 }
 
@@ -384,6 +391,17 @@ async function removerPracticaDelGrupo(idPractica) {
     }
 }
 
-// Inicializar cuando se abre la pestaña de relaciones
-// (se llamará desde tabs.js cuando se cambia a la pestaña)
+// ==========================================
+// EXPONER FUNCIONES AL SCOPE GLOBAL
+// ==========================================
+// Estas funciones son llamadas desde HTML (onclick, onchange, onkeyup)
+// y necesitan estar disponibles en el scope global window
+
 window.inicializarRelaciones = inicializarRelaciones;
+window.buscarGruposParaRelacion = buscarGruposParaRelacion;
+window.cargarRelacionesDelGrupo = cargarRelacionesDelGrupo;
+window.agregarIndicacionAGrupo = agregarIndicacionAGrupo;
+window.removerIndicacionDelGrupo = removerIndicacionDelGrupo;
+window.buscarPracticasParaRelacion = buscarPracticasParaRelacion;
+window.agregarPracticaAGrupo = agregarPracticaAGrupo;
+window.removerPracticaDelGrupo = removerPracticaDelGrupo;
