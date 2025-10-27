@@ -37,9 +37,37 @@ async function inicializarRelaciones() {
         actualizarSelectIndicaciones();
         actualizarSelectPracticas();
 
+        // Configurar event listeners
+        configurarEventListeners();
+
     } catch (error) {
         console.error('Error al inicializar relaciones:', error);
         alert('❌ Error al cargar datos: ' + error.message);
+    }
+}
+
+/**
+ * Configurar event listeners para los campos de búsqueda
+ */
+function configurarEventListeners() {
+    console.log('[DEBUG] Configurando event listeners...');
+
+    // Buscador de grupos
+    const inputGrupoBuscar = document.getElementById('rel-grupo-buscar');
+    if (inputGrupoBuscar) {
+        console.log('[DEBUG] Event listener para rel-grupo-buscar configurado');
+        inputGrupoBuscar.addEventListener('input', buscarGruposParaRelacion);
+        inputGrupoBuscar.addEventListener('keyup', buscarGruposParaRelacion);
+    } else {
+        console.error('[ERROR] No se encontró el campo rel-grupo-buscar');
+    }
+
+    // Buscador de prácticas
+    const inputPracticaBuscar = document.getElementById('rel-practica-buscar');
+    if (inputPracticaBuscar) {
+        console.log('[DEBUG] Event listener para rel-practica-buscar configurado');
+        inputPracticaBuscar.addEventListener('input', buscarPracticasParaRelacion);
+        inputPracticaBuscar.addEventListener('keyup', buscarPracticasParaRelacion);
     }
 }
 
