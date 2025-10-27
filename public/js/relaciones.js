@@ -109,20 +109,31 @@ function actualizarSelectGrupos(filtrados = null) {
 
     console.log('[DEBUG] actualizarSelectGrupos - grupos a mostrar:', grupos.length);
 
-    // Construir opciones HTML
-    let html = '<option value="">-- Selecciona un grupo --</option>';
+    // Limpiar todas las opciones existentes
+    select.options.length = 0;
+
+    // Agregar opción por defecto
+    const defaultOption = new Option('-- Selecciona un grupo --', '');
+    select.add(defaultOption);
+
+    // Agregar cada grupo como nueva opción
     grupos.forEach(grupo => {
-        html += `<option value="${grupo.id_grupo}">${grupo.nombre}${grupo.horas_ayuno ? ` (${grupo.horas_ayuno}h ayuno)` : ''}</option>`;
+        const textoOpcion = `${grupo.nombre}${grupo.horas_ayuno ? ` (${grupo.horas_ayuno}h ayuno)` : ''}`;
+        const option = new Option(textoOpcion, grupo.id_grupo);
+        select.add(option);
     });
 
-    // Actualizar con innerHTML
-    select.innerHTML = html;
-    console.log('[DEBUG] Select actualizado con', select.options.length, 'opciones');
+    console.log('[DEBUG] Select actualizado con', select.options.length, 'opciones usando select.add()');
 
     // Restaurar selección si aún existe
     if (valorActual && grupos.some(g => g.id_grupo == valorActual)) {
         select.value = valorActual;
     }
+
+    // Forzar refresco visual
+    select.style.display = 'none';
+    select.offsetHeight; // Force reflow
+    select.style.display = '';
 }
 
 /**
@@ -155,20 +166,30 @@ function actualizarSelectIndicaciones() {
     const select = document.getElementById('rel-indicacion-select');
     const valorActual = select.value; // Guardar selección actual
 
-    // Construir opciones HTML
-    let html = '<option value="">-- Selecciona una indicación --</option>';
+    // Limpiar todas las opciones existentes
+    select.options.length = 0;
+
+    // Agregar opción por defecto
+    const defaultOption = new Option('-- Selecciona una indicación --', '');
+    select.add(defaultOption);
+
+    // Agregar cada indicación como nueva opción
     todasLasIndicaciones.forEach(ind => {
         const textoCorto = ind.texto.substring(0, 80) + (ind.texto.length > 80 ? '...' : '');
-        html += `<option value="${ind.id_indicacion}">[${ind.tipo}] ${textoCorto}</option>`;
+        const textoOpcion = `[${ind.tipo}] ${textoCorto}`;
+        const option = new Option(textoOpcion, ind.id_indicacion);
+        select.add(option);
     });
-
-    // Actualizar con innerHTML
-    select.innerHTML = html;
 
     // Restaurar selección si aún existe
     if (valorActual && todasLasIndicaciones.some(i => i.id_indicacion == valorActual)) {
         select.value = valorActual;
     }
+
+    // Forzar refresco visual
+    select.style.display = 'none';
+    select.offsetHeight; // Force reflow
+    select.style.display = '';
 }
 
 /**
@@ -180,19 +201,31 @@ function actualizarSelectPracticas(filtradas = null) {
 
     const practicas = filtradas || todasLasPracticas;
 
-    // Construir opciones HTML
-    let html = '<option value="">-- Selecciona una práctica --</option>';
+    // Limpiar todas las opciones existentes
+    select.options.length = 0;
+
+    // Agregar opción por defecto
+    const defaultOption = new Option('-- Selecciona una práctica --', '');
+    select.add(defaultOption);
+
+    // Agregar cada práctica como nueva opción
     practicas.forEach(prac => {
-        html += `<option value="${prac.id_practica}">${prac.codigo_did} - ${prac.nombre}</option>`;
+        const textoOpcion = `${prac.codigo_did} - ${prac.nombre}`;
+        const option = new Option(textoOpcion, prac.id_practica);
+        select.add(option);
     });
 
-    // Actualizar con innerHTML
-    select.innerHTML = html;
+    console.log('[DEBUG] Select de prácticas actualizado con', select.options.length, 'opciones');
 
     // Restaurar selección si aún existe
     if (valorActual && practicas.some(p => p.id_practica == valorActual)) {
         select.value = valorActual;
     }
+
+    // Forzar refresco visual
+    select.style.display = 'none';
+    select.offsetHeight; // Force reflow
+    select.style.display = '';
 }
 
 /**
