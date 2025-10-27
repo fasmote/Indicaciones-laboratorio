@@ -48,7 +48,18 @@ async function inicializarRelaciones() {
  */
 function actualizarSelectGrupos(filtrados = null) {
     const select = document.getElementById('rel-grupo-select');
-    select.innerHTML = '<option value="">-- Selecciona un grupo --</option>';
+    const valorActual = select.value; // Guardar selección actual
+
+    // Remover todas las opciones existentes
+    while (select.options.length > 0) {
+        select.remove(0);
+    }
+
+    // Agregar opción por defecto
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = '-- Selecciona un grupo --';
+    select.appendChild(defaultOption);
 
     const grupos = filtrados || todosLosGrupos;
 
@@ -58,6 +69,14 @@ function actualizarSelectGrupos(filtrados = null) {
         option.textContent = `${grupo.nombre}${grupo.horas_ayuno ? ` (${grupo.horas_ayuno}h ayuno)` : ''}`;
         select.appendChild(option);
     });
+
+    // Restaurar selección si aún existe
+    if (valorActual && Array.from(select.options).some(opt => opt.value === valorActual)) {
+        select.value = valorActual;
+    }
+
+    // Disparar evento change para forzar actualización visual
+    select.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 /**
@@ -84,7 +103,18 @@ function buscarGruposParaRelacion() {
  */
 function actualizarSelectIndicaciones() {
     const select = document.getElementById('rel-indicacion-select');
-    select.innerHTML = '<option value="">-- Selecciona una indicación --</option>';
+    const valorActual = select.value; // Guardar selección actual
+
+    // Remover todas las opciones existentes
+    while (select.options.length > 0) {
+        select.remove(0);
+    }
+
+    // Agregar opción por defecto
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = '-- Selecciona una indicación --';
+    select.appendChild(defaultOption);
 
     todasLasIndicaciones.forEach(ind => {
         const option = document.createElement('option');
@@ -93,6 +123,14 @@ function actualizarSelectIndicaciones() {
         option.textContent = `[${ind.tipo}] ${textoCorto}`;
         select.appendChild(option);
     });
+
+    // Restaurar selección si aún existe
+    if (valorActual && Array.from(select.options).some(opt => opt.value === valorActual)) {
+        select.value = valorActual;
+    }
+
+    // Disparar evento change para forzar actualización visual
+    select.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 /**
@@ -100,7 +138,18 @@ function actualizarSelectIndicaciones() {
  */
 function actualizarSelectPracticas(filtradas = null) {
     const select = document.getElementById('rel-practica-select');
-    select.innerHTML = '<option value="">-- Selecciona una práctica --</option>';
+    const valorActual = select.value; // Guardar selección actual
+
+    // Remover todas las opciones existentes
+    while (select.options.length > 0) {
+        select.remove(0);
+    }
+
+    // Agregar opción por defecto
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = '-- Selecciona una práctica --';
+    select.appendChild(defaultOption);
 
     const practicas = filtradas || todasLasPracticas;
 
@@ -110,6 +159,14 @@ function actualizarSelectPracticas(filtradas = null) {
         option.textContent = `${prac.codigo_did} - ${prac.nombre}`;
         select.appendChild(option);
     });
+
+    // Restaurar selección si aún existe
+    if (valorActual && Array.from(select.options).some(opt => opt.value === valorActual)) {
+        select.value = valorActual;
+    }
+
+    // Disparar evento change para forzar actualización visual
+    select.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 /**
