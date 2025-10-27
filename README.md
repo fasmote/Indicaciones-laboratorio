@@ -482,7 +482,8 @@ Reglas especiales para combinaciones de prácticas
 
 ### Diagrama Entidad-Relación (DER)
 
-Ver diagrama detallado en: [`docs/DER_DIAGRAMA.md`](docs/DER_DIAGRAMA.md)
+El diagrama completo está incluido en este README (sección Base de Datos arriba).
+Para más detalles sobre la lógica de relaciones, ver: [`docs/LOGICA_BASE_DATOS.md`](docs/LOGICA_BASE_DATOS.md)
 
 ---
 
@@ -641,7 +642,7 @@ POST   /api/simulador/generar      # Generar indicaciones consolidadas
 
 ### Documentación Completa de API
 
-Ver: [`docs/API.md`](docs/API.md) *(pendiente)*
+Los endpoints principales están documentados arriba. Para arquitectura de base de datos y lógica de relaciones, ver: [`docs/LOGICA_BASE_DATOS.md`](docs/LOGICA_BASE_DATOS.md)
 
 ---
 
@@ -761,14 +762,33 @@ indicaciones-app2/
 
 ### Documentos Técnicos Disponibles
 
-- **[ANALISIS_MODELO_DATOS.md](docs/ANALISIS_MODELO_DATOS.md)**: Análisis del Excel original
-- **[DER_DIAGRAMA.md](docs/DER_DIAGRAMA.md)**: Diagrama Entidad-Relación detallado
-- **[MER_MODELO.md](docs/MER_MODELO.md)**: Modelo Entidad-Relación completo
-- **[ARQUITECTURA_PROPUESTA.md](docs/ARQUITECTURA_PROPUESTA.md)**: Arquitectura del sistema
-- **[GUIA_USUARIO.md](docs/GUIA_USUARIO.md)**: Manual de usuario
-- **[GUIA_DESARROLLO.md](docs/GUIA_DESARROLLO.md)**: Guía para desarrolladores
-- **[GUIA_MIGRACION_NUBE.md](docs/GUIA_MIGRACION_NUBE.md)**: Deploy en la nube
-- **[CHANGELOG.md](CHANGELOG.md)**: Historial detallado de cambios
+#### 📋 Documentación Principal
+
+- **[ESTADO_ACTUAL_v1.7.0.md](docs/ESTADO_ACTUAL_v1.7.0.md)**: Estado completo del proyecto v1.7.0
+  - Resumen ejecutivo de la versión actual
+  - Funcionalidades implementadas detalladas
+  - Flujo de trabajo completo
+  - Estadísticas y métricas
+  - Instrucciones para continuar desarrollo
+
+- **[RESUMEN_SESION_v1.7.0.md](RESUMEN_SESION_v1.7.0.md)**: Resumen de última sesión de desarrollo
+  - Objetivos y logros
+  - Commits realizados
+  - Guía de testing
+  - Próximos pasos (v1.8.0)
+
+- **[LOGICA_BASE_DATOS.md](docs/LOGICA_BASE_DATOS.md)**: Arquitectura de base de datos explicada
+  - Comparación de enfoques (1:1 vs M:N)
+  - Casos de uso reales con ejemplos
+  - Ventajas y desventajas
+  - Ejemplos prácticos paso a paso
+  - Justificación de decisiones de diseño
+
+#### 🐛 Documentación de Fixes
+
+- **[FIX_BUG_SELECCION_21-10-2025.md](docs/FIX_BUG_SELECCION_21-10-2025.md)**: Fix de bug de selección
+- **[FIX_LISTA_SELECCIONADAS_21-10-2025.md](docs/FIX_LISTA_SELECCIONADAS_21-10-2025.md)**: Fix de lista de prácticas seleccionadas
+- **[MEJORA_INDICADORES_VISUALES.md](docs/MEJORA_INDICADORES_VISUALES.md)**: Mejoras de indicadores visuales
 
 ---
 
