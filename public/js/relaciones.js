@@ -287,6 +287,14 @@ async function cargarPracticasDelGrupo() {
 }
 
 /**
+ * Limpiar el formulario de indicación
+ */
+function limpiarFormularioIndicacion() {
+    document.getElementById('rel-indicacion-select').value = '';
+    document.getElementById('rel-indicacion-orden').value = '1';
+}
+
+/**
  * Agregar una indicación al grupo seleccionado
  */
 async function agregarIndicacionAGrupo() {
@@ -307,8 +315,7 @@ async function agregarIndicacionAGrupo() {
         await API.agregarIndicacionAGrupo(grupoSeleccionado, parseInt(idIndicacion), parseInt(orden));
 
         // Limpiar formulario
-        document.getElementById('rel-indicacion-select').value = '';
-        document.getElementById('rel-indicacion-orden').value = '1';
+        limpiarFormularioIndicacion();
 
         // Recargar lista
         await cargarIndicacionesDelGrupo();
@@ -340,6 +347,16 @@ async function removerIndicacionDelGrupo(idIndicacion) {
 }
 
 /**
+ * Limpiar el formulario de práctica
+ */
+function limpiarFormularioPractica() {
+    document.getElementById('rel-practica-select').value = '';
+    document.getElementById('rel-practica-buscar').value = '';
+    // Restaurar lista completa de prácticas
+    actualizarSelectPracticas();
+}
+
+/**
  * Agregar una práctica al grupo seleccionado
  */
 async function agregarPracticaAGrupo() {
@@ -359,8 +376,7 @@ async function agregarPracticaAGrupo() {
         await API.agregarPracticaAGrupo(grupoSeleccionado, parseInt(idPractica));
 
         // Limpiar formulario
-        document.getElementById('rel-practica-select').value = '';
-        document.getElementById('rel-practica-buscar').value = '';
+        limpiarFormularioPractica();
 
         // Recargar lista
         await cargarPracticasDelGrupo();
@@ -401,7 +417,9 @@ window.inicializarRelaciones = inicializarRelaciones;
 window.buscarGruposParaRelacion = buscarGruposParaRelacion;
 window.cargarRelacionesDelGrupo = cargarRelacionesDelGrupo;
 window.agregarIndicacionAGrupo = agregarIndicacionAGrupo;
+window.limpiarFormularioIndicacion = limpiarFormularioIndicacion;
 window.removerIndicacionDelGrupo = removerIndicacionDelGrupo;
 window.buscarPracticasParaRelacion = buscarPracticasParaRelacion;
 window.agregarPracticaAGrupo = agregarPracticaAGrupo;
+window.limpiarFormularioPractica = limpiarFormularioPractica;
 window.removerPracticaDelGrupo = removerPracticaDelGrupo;
