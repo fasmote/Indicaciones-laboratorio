@@ -20,11 +20,11 @@ let todasLasPracticas = [];
  */
 async function inicializarRelaciones() {
     try {
-        // Cargar grupos en el selector
+        // Cargar grupos en la lista
         const responseGrupos = await API.listarGrupos();
         todosLosGrupos = responseGrupos.data;
 
-        actualizarSelectGrupos();
+        mostrarGruposEnLista(todosLosGrupos);
 
         // Cargar todas las indicaciones
         const responseIndicaciones = await API.listarIndicaciones();
@@ -99,64 +99,94 @@ function configurarEventListeners() {
 }
 
 /**
- * Actualizar el selector de grupos
+ * Mostrar grupos en la lista filtrable (como el simulador)
  */
-function actualizarSelectGrupos(filtrados = null) {
-    const select = document.getElementById('rel-grupo-select');
-    const valorActual = select.value; // Guardar selección actual
+function mostrarGruposEnLista(grupos) {
+    const container = document.getElementById('rel-grupos-list');
 
-    const grupos = filtrados || todosLosGrupos;
-
-    console.log('[DEBUG] actualizarSelectGrupos - grupos a mostrar:', grupos.length);
-
-    // Limpiar todas las opciones existentes
-    select.options.length = 0;
-
-    // Agregar opción por defecto
-    const defaultOption = new Option('-- Selecciona un grupo --', '');
-    select.add(defaultOption);
-
-    // Agregar cada grupo como nueva opción
-    grupos.forEach(grupo => {
-        const textoOpcion = `${grupo.nombre}${grupo.horas_ayuno ? ` (${grupo.horas_ayuno}h ayuno)` : ''}`;
-        const option = new Option(textoOpcion, grupo.id_grupo);
-        select.add(option);
-    });
-
-    console.log('[DEBUG] Select actualizado con', select.options.length, 'opciones usando select.add()');
-
-    // Restaurar selección si aún existe
-    if (valorActual && grupos.some(g => g.id_grupo == valorActual)) {
-        select.value = valorActual;
+    if (!grupos || grupos.length === 0) {
+        container.innerHTML = '<p style="color: #999; font-style: italic;">No se encontraron grupos.</p>';
+        return;
     }
 
-    // Forzar refresco visual
-    select.style.display = 'none';
-    select.offsetHeight; // Force reflow
-    select.style.display = '';
+    let html = '';
+    grupos.forEach(grupo => {
+        const textoGrupo = `${grupo.nombre}${grupo.horas_ayuno ? ` (${grupo.horas_ayuno}h ayuno)` : ''}`;
+        html += `
+            <div class="practica-item" data-grupo-id="${grupo.id_grupo}" style="padding: 8px; margin: 4px 0; background: #f8f9fa; border-radius: 4px; cursor: pointer; border: 2px solid transparent;">
+                <label style="cursor: pointer; display: block; user-select: none;" onclick="seleccionarGrupo(${grupo.id_grupo})">
+                    <strong>${textoGrupo}</strong>
+                    ${grupo.descripcion ? `<br><small style="color: #666;">${grupo.descripcion}</small>` : ''}
+                </label>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+    console.log('[DEBUG] Lista de grupos actualizada con', grupos.length, 'grupos');
 }
 
 /**
- * Buscar grupos por término
+ * Buscar grupos por término (como filtrarPracticas en el simulador)
  */
 function buscarGruposParaRelacion() {
-    const termino = document.getElementById('rel-grupo-buscar').value.trim().toLowerCase();
-    console.log('[DEBUG] Buscando grupos con término:', termino);
-    console.log('[DEBUG] Total de grupos disponibles:', todosLosGrupos.length);
+    const searchText = document.getElementById('rel-grupo-buscar').value.toLowerCase();
+    console.log('[DEBUG] Buscando grupos con término:', searchText);
 
-    if (termino === '') {
-        console.log('[DEBUG] Término vacío, mostrando todos los grupos');
-        actualizarSelectGrupos();
+    if (searchText === '') {
+        mostrarGruposEnLista(todosLosGrupos);
         return;
     }
 
     const gruposFiltrados = todosLosGrupos.filter(grupo =>
-        grupo.nombre.toLowerCase().includes(termino) ||
-        (grupo.descripcion && grupo.descripcion.toLowerCase().includes(termino))
+        grupo.nombre.toLowerCase().includes(searchText) ||
+        (grupo.descripcion && grupo.descripcion.toLowerCase().includes(searchText))
     );
 
     console.log('[DEBUG] Grupos filtrados encontrados:', gruposFiltrados.length);
-    actualizarSelectGrupos(gruposFiltrados);
+    mostrarGruposEnLista(gruposFiltrados);
+}
+
+/**
+ * Seleccionar un grupo de la lista
+ */
+function seleccionarGrupo(idGrupo) {
+    console.log('[DEBUG] Grupo seleccionado:', idGrupo);
+
+    // Remover selección anterior
+    document.querySelectorAll('.practica-item').forEach(item => {
+        item.style.border = '2px solid transparent';
+        item.style.background = '#f8f9fa';
+    });
+
+    // Marcar nuevo grupo seleccionado
+    const itemSeleccionado = document.querySelector(`[data-grupo-id="${idGrupo}"]`);
+    if (itemSeleccionado) {
+        itemSeleccionado.style.border = '2px solid #4CAF50';
+        itemSeleccionado.style.background = '#e8f5e9';
+    }
+
+    // Actualizar variable global y cargar relaciones
+    grupoSeleccionado = idGrupo;
+    cargarRelacionesDelGrupo();
+}
+
+/**
+ * Cargar las relaciones del grupo seleccionado
+ */
+async function cargarRelacionesDelGrupo() {
+    if (!grupoSeleccionado) {
+        document.getElementById('relaciones-content').style.display = 'none';
+        return;
+    }
+
+    document.getElementById('relaciones-content').style.display = 'block';
+
+    // Cargar indicaciones y prácticas del grupo
+    await Promise.all([
+        cargarIndicacionesDelGrupo(),
+        cargarPracticasDelGrupo()
+    ]);
 }
 
 /**
@@ -245,28 +275,6 @@ async function buscarPracticasParaRelacion() {
     } catch (error) {
         console.error('Error al buscar prácticas:', error);
     }
-}
-
-/**
- * Cargar las relaciones de un grupo seleccionado
- */
-async function cargarRelacionesDelGrupo() {
-    const idGrupo = document.getElementById('rel-grupo-select').value;
-
-    if (!idGrupo) {
-        document.getElementById('relaciones-content').style.display = 'none';
-        grupoSeleccionado = null;
-        return;
-    }
-
-    grupoSeleccionado = parseInt(idGrupo);
-    document.getElementById('relaciones-content').style.display = 'block';
-
-    // Cargar indicaciones y prácticas del grupo
-    await Promise.all([
-        cargarIndicacionesDelGrupo(),
-        cargarPracticasDelGrupo()
-    ]);
 }
 
 /**
@@ -503,6 +511,7 @@ async function removerPracticaDelGrupo(idPractica) {
 
 window.inicializarRelaciones = inicializarRelaciones;
 window.buscarGruposParaRelacion = buscarGruposParaRelacion;
+window.seleccionarGrupo = seleccionarGrupo;
 window.cargarRelacionesDelGrupo = cargarRelacionesDelGrupo;
 window.agregarIndicacionAGrupo = agregarIndicacionAGrupo;
 window.limpiarFormularioIndicacion = limpiarFormularioIndicacion;
