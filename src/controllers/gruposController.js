@@ -200,9 +200,14 @@ async function removerIndicacion(req, res, next) {
       return res.status(404).json({ success: false, error: 'Relación no encontrada' });
     }
 
-    // Eliminación lógica
+    // Eliminación lógica usando clave compuesta
     await prisma.grupoIndicacion.update({
-      where: { id_grupo_indicacion: relacion.id_grupo_indicacion },
+      where: {
+        id_grupo_id_indicacion: {
+          id_grupo: idGrupo,
+          id_indicacion: idIndicacion
+        }
+      },
       data: { activo: false }
     });
 
@@ -293,9 +298,14 @@ async function removerPractica(req, res, next) {
       return res.status(404).json({ success: false, error: 'Relación no encontrada' });
     }
 
-    // Eliminación lógica
+    // Eliminación lógica usando clave compuesta
     await prisma.practicaGrupo.update({
-      where: { id_practica_grupo: relacion.id_practica_grupo },
+      where: {
+        id_practica_id_grupo: {
+          id_practica: idPractica,
+          id_grupo: idGrupo
+        }
+      },
       data: { activo: false }
     });
 

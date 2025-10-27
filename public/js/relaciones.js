@@ -50,33 +50,21 @@ function actualizarSelectGrupos(filtrados = null) {
     const select = document.getElementById('rel-grupo-select');
     const valorActual = select.value; // Guardar selección actual
 
-    // Remover todas las opciones existentes
-    while (select.options.length > 0) {
-        select.remove(0);
-    }
-
-    // Agregar opción por defecto
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = '-- Selecciona un grupo --';
-    select.appendChild(defaultOption);
-
     const grupos = filtrados || todosLosGrupos;
 
+    // Construir opciones HTML
+    let html = '<option value="">-- Selecciona un grupo --</option>';
     grupos.forEach(grupo => {
-        const option = document.createElement('option');
-        option.value = grupo.id_grupo;
-        option.textContent = `${grupo.nombre}${grupo.horas_ayuno ? ` (${grupo.horas_ayuno}h ayuno)` : ''}`;
-        select.appendChild(option);
+        html += `<option value="${grupo.id_grupo}">${grupo.nombre}${grupo.horas_ayuno ? ` (${grupo.horas_ayuno}h ayuno)` : ''}</option>`;
     });
 
+    // Actualizar con innerHTML
+    select.innerHTML = html;
+
     // Restaurar selección si aún existe
-    if (valorActual && Array.from(select.options).some(opt => opt.value === valorActual)) {
+    if (valorActual && grupos.some(g => g.id_grupo == valorActual)) {
         select.value = valorActual;
     }
-
-    // Disparar evento change para forzar actualización visual
-    select.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 /**
@@ -105,32 +93,20 @@ function actualizarSelectIndicaciones() {
     const select = document.getElementById('rel-indicacion-select');
     const valorActual = select.value; // Guardar selección actual
 
-    // Remover todas las opciones existentes
-    while (select.options.length > 0) {
-        select.remove(0);
-    }
-
-    // Agregar opción por defecto
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = '-- Selecciona una indicación --';
-    select.appendChild(defaultOption);
-
+    // Construir opciones HTML
+    let html = '<option value="">-- Selecciona una indicación --</option>';
     todasLasIndicaciones.forEach(ind => {
-        const option = document.createElement('option');
-        option.value = ind.id_indicacion;
         const textoCorto = ind.texto.substring(0, 80) + (ind.texto.length > 80 ? '...' : '');
-        option.textContent = `[${ind.tipo}] ${textoCorto}`;
-        select.appendChild(option);
+        html += `<option value="${ind.id_indicacion}">[${ind.tipo}] ${textoCorto}</option>`;
     });
 
+    // Actualizar con innerHTML
+    select.innerHTML = html;
+
     // Restaurar selección si aún existe
-    if (valorActual && Array.from(select.options).some(opt => opt.value === valorActual)) {
+    if (valorActual && todasLasIndicaciones.some(i => i.id_indicacion == valorActual)) {
         select.value = valorActual;
     }
-
-    // Disparar evento change para forzar actualización visual
-    select.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 /**
@@ -140,33 +116,21 @@ function actualizarSelectPracticas(filtradas = null) {
     const select = document.getElementById('rel-practica-select');
     const valorActual = select.value; // Guardar selección actual
 
-    // Remover todas las opciones existentes
-    while (select.options.length > 0) {
-        select.remove(0);
-    }
-
-    // Agregar opción por defecto
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = '-- Selecciona una práctica --';
-    select.appendChild(defaultOption);
-
     const practicas = filtradas || todasLasPracticas;
 
+    // Construir opciones HTML
+    let html = '<option value="">-- Selecciona una práctica --</option>';
     practicas.forEach(prac => {
-        const option = document.createElement('option');
-        option.value = prac.id_practica;
-        option.textContent = `${prac.codigo_did} - ${prac.nombre}`;
-        select.appendChild(option);
+        html += `<option value="${prac.id_practica}">${prac.codigo_did} - ${prac.nombre}</option>`;
     });
 
+    // Actualizar con innerHTML
+    select.innerHTML = html;
+
     // Restaurar selección si aún existe
-    if (valorActual && Array.from(select.options).some(opt => opt.value === valorActual)) {
+    if (valorActual && practicas.some(p => p.id_practica == valorActual)) {
         select.value = valorActual;
     }
-
-    // Disparar evento change para forzar actualización visual
-    select.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
 /**
