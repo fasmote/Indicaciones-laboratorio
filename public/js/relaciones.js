@@ -52,23 +52,50 @@ async function inicializarRelaciones() {
 function configurarEventListeners() {
     console.log('[DEBUG] Configurando event listeners...');
 
-    // Buscador de grupos
-    const inputGrupoBuscar = document.getElementById('rel-grupo-buscar');
-    if (inputGrupoBuscar) {
-        console.log('[DEBUG] Event listener para rel-grupo-buscar configurado');
-        inputGrupoBuscar.addEventListener('input', buscarGruposParaRelacion);
-        inputGrupoBuscar.addEventListener('keyup', buscarGruposParaRelacion);
-    } else {
-        console.error('[ERROR] No se encontró el campo rel-grupo-buscar');
-    }
+    // Esperar un momento para asegurar que el DOM esté completamente renderizado
+    setTimeout(() => {
+        // Buscador de grupos
+        const inputGrupoBuscar = document.getElementById('rel-grupo-buscar');
+        if (inputGrupoBuscar) {
+            console.log('[DEBUG] Event listener para rel-grupo-buscar configurado');
 
-    // Buscador de prácticas
-    const inputPracticaBuscar = document.getElementById('rel-practica-buscar');
-    if (inputPracticaBuscar) {
-        console.log('[DEBUG] Event listener para rel-practica-buscar configurado');
-        inputPracticaBuscar.addEventListener('input', buscarPracticasParaRelacion);
-        inputPracticaBuscar.addEventListener('keyup', buscarPracticasParaRelacion);
-    }
+            // Remover listeners previos si existen para evitar duplicados
+            inputGrupoBuscar.removeEventListener('input', buscarGruposParaRelacion);
+            inputGrupoBuscar.removeEventListener('keyup', buscarGruposParaRelacion);
+
+            // Agregar listeners
+            inputGrupoBuscar.addEventListener('input', function(e) {
+                console.log('[DEBUG] Evento INPUT disparado en rel-grupo-buscar');
+                buscarGruposParaRelacion();
+            });
+            inputGrupoBuscar.addEventListener('keyup', function(e) {
+                console.log('[DEBUG] Evento KEYUP disparado en rel-grupo-buscar');
+                buscarGruposParaRelacion();
+            });
+
+            console.log('[DEBUG] Listeners agregados exitosamente a rel-grupo-buscar');
+        } else {
+            console.error('[ERROR] No se encontró el campo rel-grupo-buscar');
+            console.error('[ERROR] Elementos disponibles con id que contienen "rel":',
+                Array.from(document.querySelectorAll('[id*="rel"]')).map(el => el.id));
+        }
+
+        // Buscador de prácticas
+        const inputPracticaBuscar = document.getElementById('rel-practica-buscar');
+        if (inputPracticaBuscar) {
+            console.log('[DEBUG] Event listener para rel-practica-buscar configurado');
+
+            // Remover listeners previos
+            inputPracticaBuscar.removeEventListener('input', buscarPracticasParaRelacion);
+            inputPracticaBuscar.removeEventListener('keyup', buscarPracticasParaRelacion);
+
+            // Agregar listeners
+            inputPracticaBuscar.addEventListener('input', buscarPracticasParaRelacion);
+            inputPracticaBuscar.addEventListener('keyup', buscarPracticasParaRelacion);
+        } else {
+            console.error('[ERROR] No se encontró el campo rel-practica-buscar');
+        }
+    }, 100); // Esperar 100ms para que el DOM se renderice
 }
 
 /**
