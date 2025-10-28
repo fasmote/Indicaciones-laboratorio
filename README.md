@@ -6,7 +6,7 @@
 
 <!-- Badges principales -->
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.7.0-brightgreen?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/version-1.8.0-brightgreen?style=for-the-badge" alt="Version">
   <img src="https://img.shields.io/badge/node-%3E%3D18.0.0-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
   <img src="https://img.shields.io/badge/express-4.18-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express">
   <img src="https://img.shields.io/badge/prisma-5.7-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma">
@@ -125,10 +125,16 @@ RESUMEN:
 ### Funcionalidades Principales
 
 - **Simulador Inteligente**: Genera indicaciones consolidadas a partir de múltiples prácticas
+- **🆕 Sistema de Múltiples Solicitudes**: Guarda y consolida múltiples simulaciones simultáneamente
+  - Guardar solicitudes numeradas automáticamente
+  - Consolidar todas las solicitudes + selección actual
+  - Gestión visual con cards y badges
+  - Almacenamiento en localStorage (sesión actual)
 - **Resolución de Conflictos**: Maneja automáticamente conflictos de ayuno y tipo de orina
 - **Eliminación de Duplicados**: Consolida indicaciones repetidas
 - **Búsqueda en Tiempo Real**: Filtrado instantáneo de prácticas
 - **Indicadores Visuales**: Badges que muestran si una práctica tiene indicaciones configuradas
+- **Toast Notifications**: Sistema de notificaciones no intrusivo
 - **Interfaz Responsive**: Funciona en desktop, tablet y móvil
 - **Importación Masiva**: Carga datos desde archivos Excel
 
