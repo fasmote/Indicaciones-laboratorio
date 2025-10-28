@@ -687,4 +687,32 @@ function actualizarPracticasSeleccionadas() {
 window.practicasSeleccionadasMap = practicasSeleccionadasMap;
 window.actualizarPracticasSeleccionadas = actualizarPracticasSeleccionadas;
 
+// ===================================================================
+// AUTO-SELECCIÓN DE TEXTO EN CAMPOS DE BÚSQUEDA
+// ===================================================================
+// Agregar listeners para auto-seleccionar texto al hacer focus
+document.addEventListener('DOMContentLoaded', function() {
+    const searchFields = [
+        'search-practicas',           // Simulador
+        'search-practicas-list',      // Prácticas ABM
+        'rel-grupo-buscar',           // Relaciones - Grupos
+        'rel-practica-buscar'         // Relaciones - Prácticas
+    ];
+
+    searchFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            // Usar click para mayor compatibilidad
+            field.addEventListener('click', function() {
+                this.select();
+            });
+            // También con focus por si acaso
+            field.addEventListener('focus', function() {
+                // Timeout para asegurar que se ejecute después del focus
+                setTimeout(() => this.select(), 0);
+            });
+        }
+    });
+});
+
 console.log('✅ tabs.js cargado correctamente');
