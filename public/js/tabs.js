@@ -685,7 +685,8 @@ function actualizarPracticasSeleccionadas() {
     });
 }
 
-// Exponer el Map al scope global para que solicitudes.js pueda accederlo
+// Exponer el Map y funciones al scope global para que solicitudes.js pueda accederlo
 window.practicasSeleccionadasMap = practicasSeleccionadasMap;
+window.actualizarPracticasSeleccionadas = actualizarPracticasSeleccionadas;
 
 console.log('✅ tabs.js cargado correctamente');

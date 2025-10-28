@@ -436,12 +436,15 @@
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                    <button class="btn btn-success" onclick="generarIndicaciones()">
-                        🚀 Generar Indicaciones
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <button class="btn btn-success" onclick="consolidarYGenerar()" style="flex: 1; min-width: 200px;">
+                        📊 Consolidar y Generar
                     </button>
-                    <button class="btn btn-primary" onclick="guardarComoSolicitud()" style="background: #2196F3;">
+                    <button class="btn btn-primary" onclick="guardarComoSolicitud()" style="background: #2196F3; flex: 1; min-width: 180px;">
                         🗂️ Guardar como Solicitud
+                    </button>
+                    <button class="btn" onclick="limpiarTodo()" style="background: #9e9e9e; color: white; min-width: 150px;">
+                        🧹 Limpiar Todo
                     </button>
                 </div>
 
@@ -449,9 +452,6 @@
                 <div id="solicitudes-section" style="display: none; margin-bottom: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ddd;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <h3 style="margin: 0; color: #333;">📋 Solicitudes Guardadas (<span id="solicitudes-count">0</span>)</h3>
-                        <button class="btn btn-warning" onclick="consolidarTodasLasSolicitudes()" style="background: #FF9800; font-size: 0.95rem;">
-                            📊 Consolidar TODAS
-                        </button>
                     </div>
                     <div id="solicitudes-list" style="display: flex; flex-direction: column; gap: 10px;">
                         <!-- Aquí se mostrarán las solicitudes guardadas -->
@@ -689,9 +689,9 @@
 
     <script src="/js/api.js?v=4"></script>
     <script src="/js/utils.js?v=2"></script>
-    <script src="/js/tabs.js?v=3"></script>
+    <script src="/js/tabs.js?v=4"></script>
     <script src="/js/crud.js?v=1"></script>
     <script src="/js/relaciones.js?v=10"></script>
-    <script src="/js/solicitudes.js?v=3"></script>
+    <script src="/js/solicitudes.js?v=4"></script>
 </body>
 </html>

@@ -246,22 +246,29 @@ const SolicitudesMultiples = (() => {
     }
 
     /**
-     * Consolidar TODAS las solicitudes en una única lista de indicaciones
+     * Consolidar solicitudes guardadas + selección actual y generar indicaciones
      */
-    async function consolidarTodasLasSolicitudes() {
-        if (solicitudes.length === 0) {
-            alert('⚠️ No hay solicitudes guardadas para consolidar');
+    async function consolidarYGenerar() {
+        // Obtener selección actual
+        const practicasSeleccionadasMap = window.practicasSeleccionadasMap;
+        const haySeleccionActual = practicasSeleccionadasMap && practicasSeleccionadasMap.size > 0;
+        const haySolicitudesGuardadas = solicitudes.length > 0;
+
+        if (!haySeleccionActual && !haySolicitudesGuardadas) {
+            alert('⚠️ No hay prácticas seleccionadas ni solicitudes guardadas');
             return;
         }
 
         try {
-            // Recopilar TODAS las prácticas de TODAS las solicitudes
+            // Recopilar TODAS las prácticas: solicitudes + selección actual
             const todasLasPracticas = [];
             const idsUnicos = new Set();
 
             console.log('📊 Iniciando consolidación...');
-            console.log('📋 Solicitudes a consolidar:', solicitudes);
+            console.log('📋 Solicitudes guardadas:', solicitudes.length);
+            console.log('🧪 Selección actual:', practicasSeleccionadasMap ? practicasSeleccionadasMap.size : 0);
 
+            // 1. Agregar prácticas de solicitudes guardadas
             solicitudes.forEach((solicitud, idx) => {
                 console.log(`   Solicitud ${idx + 1} (${solicitud.nombre}):`, solicitud.practicas);
                 solicitud.practicas.forEach(practica => {
@@ -274,6 +281,24 @@ const SolicitudesMultiples = (() => {
                     }
                 });
             });
+
+            // 2. Agregar prácticas de selección actual (si las hay)
+            if (haySeleccionActual) {
+                console.log(`   Selección actual:`, Array.from(practicasSeleccionadasMap.entries()));
+                practicasSeleccionadasMap.forEach((data, id) => {
+                    console.log(`      - Práctica ID ${id}: ${data.nombre}`);
+                    if (!idsUnicos.has(id)) {
+                        idsUnicos.add(id);
+                        todasLasPracticas.push({
+                            id: id,
+                            nombre: data.nombre,
+                            codigo: data.codigo || 'N/A'
+                        });
+                    } else {
+                        console.log(`      ⚠️ Práctica ${id} duplicada, ignorando`);
+                    }
+                });
+            }
 
             console.log(`📊 Consolidando ${solicitudes.length} solicitudes...`);
             console.log(`🧪 Total de prácticas únicas: ${todasLasPracticas.length}`);
@@ -469,6 +494,59 @@ const SolicitudesMultiples = (() => {
     }
 
     /**
+     * Limpiar TODO: selección actual + solicitudes guardadas
+     */
+    function limpiarTodo() {
+        const confirmMsg = [];
+
+        // Verificar qué hay para limpiar
+        const practicasSeleccionadasMap = window.practicasSeleccionadasMap;
+        const haySeleccion = practicasSeleccionadasMap && practicasSeleccionadasMap.size > 0;
+        const haySolicitudes = solicitudes.length > 0;
+
+        if (!haySeleccion && !haySolicitudes) {
+            alert('ℹ️ No hay nada que limpiar');
+            return;
+        }
+
+        if (haySeleccion) {
+            confirmMsg.push(`${practicasSeleccionadasMap.size} práctica(s) seleccionada(s)`);
+        }
+        if (haySolicitudes) {
+            confirmMsg.push(`${solicitudes.length} solicitud(es) guardada(s)`);
+        }
+
+        const confirmar = confirm(`¿Limpiar ${confirmMsg.join(' y ')}?`);
+        if (!confirmar) return;
+
+        // Limpiar selección actual
+        if (haySeleccion) {
+            practicasSeleccionadasMap.clear();
+            // Desmarcar checkboxes
+            document.querySelectorAll('#practicas-list input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            // Actualizar vista de seleccionadas
+            if (typeof window.actualizarPracticasSeleccionadas === 'function') {
+                window.actualizarPracticasSeleccionadas();
+            }
+        }
+
+        // Limpiar solicitudes guardadas
+        if (haySolicitudes) {
+            solicitudes = [];
+            contadorSolicitudes = 0;
+            guardarEnStorage();
+            mostrarSolicitudesGuardadas();
+        }
+
+        // Cerrar resultados si están abiertos
+        cerrarResultados();
+
+        alert('✅ Todo limpiado correctamente');
+    }
+
+    /**
      * ============================================
      * INICIALIZACIÓN
      * ============================================
@@ -496,10 +574,11 @@ const SolicitudesMultiples = (() => {
         mostrarSolicitudesGuardadas,
         eliminarSolicitud,
         verDetalleSolicitud,
-        consolidarTodasLasSolicitudes,
+        consolidarYGenerar,
         copiarIndicacionesConsolidadas,
         imprimirIndicacionesConsolidadas,
         cerrarResultados,
+        limpiarTodo,
         getSolicitudes: () => solicitudes
     };
 })();
@@ -510,10 +589,11 @@ const SolicitudesMultiples = (() => {
 window.guardarComoSolicitud = SolicitudesMultiples.guardarComoSolicitud;
 window.eliminarSolicitud = SolicitudesMultiples.eliminarSolicitud;
 window.verDetalleSolicitud = SolicitudesMultiples.verDetalleSolicitud;
-window.consolidarTodasLasSolicitudes = SolicitudesMultiples.consolidarTodasLasSolicitudes;
+window.consolidarYGenerar = SolicitudesMultiples.consolidarYGenerar;
 window.copiarIndicacionesConsolidadas = SolicitudesMultiples.copiarIndicacionesConsolidadas;
 window.imprimirIndicacionesConsolidadas = SolicitudesMultiples.imprimirIndicacionesConsolidadas;
 window.cerrarResultados = SolicitudesMultiples.cerrarResultados;
+window.limpiarTodo = SolicitudesMultiples.limpiarTodo;
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
