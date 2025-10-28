@@ -8,6 +8,141 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 ---
 
 ## [Unreleased] - Próximas características
+- [ ] Fix: Auto-selección de texto en campos de búsqueda (investigación pendiente)
+- [ ] Fix: GLUCOSA/GLUCEMIA sin ayuno (pendiente datos del Excel fila 683)
+
+## [1.8.0] - 2025-10-28
+
+### 🎯 Sistema de Múltiples Solicitudes
+
+#### ✨ Agregado
+- **Sistema de Solicitudes Múltiples** (`public/js/solicitudes.js`):
+  - Guardar múltiples solicitudes numeradas automáticamente (Solicitud 1, 2, 3...)
+  - Almacenamiento en localStorage (sesión actual)
+  - Consolidación de todas las solicitudes + selección actual
+  - Eliminación de solicitudes individuales o todas a la vez
+  - Toma el ayuno máximo al consolidar múltiples solicitudes
+  - Panel visual con cards para cada solicitud guardada
+  - Contador de solicitudes guardadas
+  - Toast notifications para todas las acciones
+
+- **Mejoras de UX**:
+  - Panel verde de prácticas seleccionadas con altura fija (min-height: 80px)
+  - Placeholder cuando no hay prácticas seleccionadas
+  - 4 botones de acción:
+    - "📊 Consolidar y Generar" - Consolida todas las solicitudes + selección actual
+    - "🗂️ Guardar como Solicitud" - Guarda silenciosamente sin confirmación
+    - "🧹 Limpiar Selección" - Limpia solo la selección actual sin confirmación
+    - "🗑️ Limpiar Todo" - Limpia todo con confirmación
+  - Sistema de notificaciones toast (reemplaza alerts molestos)
+  - Auto-selección de texto en campos de búsqueda (intentado, pendiente fix)
+
+- **Nuevos archivos**:
+  - `public/js/solicitudes.js` (630 líneas) - Módulo completo de solicitudes
+  - `scripts/verificar-glucemia.js` - Script de diagnóstico para GLUCOSA/GLUCEMIA
+  - `scripts/verificar-glucosa.js` - Script de verificación detallada
+
+#### 🔧 Cambiado
+- **Frontend** (`public/js/tabs.js`):
+  - Expuesto `practicasSeleccionadasMap` globalmente
+  - Función `actualizarPracticasSeleccionadas()` ahora siempre muestra el panel
+  - Agregados event listeners para auto-selección en campos de búsqueda
+  - Panel de prácticas seleccionadas nunca desaparece (mejor UX)
+
+- **HTML** (`public/index.html`):
+  - Reorganización de botones (de 2 a 4 botones)
+  - Panel de solicitudes guardadas con diseño mejorado
+  - Cards visuales para cada solicitud con badges de cantidad
+  - Botones de acción por solicitud (Consolidar individual / Eliminar)
+  - Min-height en panel verde para evitar "saltos" visuales
+  - Versión de tabs.js actualizada a v=7
+
+#### 🐛 Corregido
+- **Composite Primary Keys** (`src/controllers/gruposController.js`):
+  - Fixed `removerIndicacion()` - Ahora usa sintaxis correcta de clave compuesta
+  - Fixed `removerPractica()` - Ahora usa sintaxis correcta de clave compuesta
+  - Sintaxis correcta: `id_grupo_id_indicacion: { id_grupo, id_indicacion }`
+
+- **Búsqueda en Relaciones**:
+  - Reemplazado `<select>` con filtro `<div>` list pattern
+  - Búsqueda de grupos funciona correctamente
+  - Búsqueda de prácticas funciona correctamente
+  - Cache busting con versiones incrementales
+
+#### 📊 Funcionalidades del Sistema de Solicitudes
+1. **Guardar Solicitud**:
+   - Toma snapshot de prácticas seleccionadas
+   - Asigna número automático (1, 2, 3...)
+   - Guarda en localStorage
+   - Muestra toast de confirmación
+   - No requiere confirmación (flujo rápido)
+
+2. **Consolidar y Generar**:
+   - Merge de todas las solicitudes guardadas
+   - Merge de selección actual (si existe)
+   - Eliminación de duplicados por ID
+   - Cálculo de ayuno máximo
+   - Genera indicaciones consolidadas
+   - Muestra resumen con cantidad de solicitudes
+
+3. **Gestión de Solicitudes**:
+   - Vista de cards con nombre, fecha, cantidad de prácticas
+   - Consolidar solicitud individual
+   - Eliminar solicitud individual (con toast, sin alert)
+   - Limpiar todas (con confirmación)
+   - Contador dinámico
+
+4. **UX Mejorada**:
+   - Panel siempre visible (no desaparece)
+   - Placeholder informativo cuando vacío
+   - Toast notifications (no más alerts molestos)
+   - Badges visuales de cantidad
+   - Colores diferenciados por acción
+
+#### 🔄 Integración
+- Sistema funciona completamente con el simulador existente
+- No afecta funcionalidad anterior
+- Almacenamiento temporal en localStorage
+- Compatible con futura migración a base de datos
+
+#### 🎯 Casos de Uso
+- Médico puede simular múltiples pedidos para el mismo paciente
+- Comparar diferentes combinaciones de prácticas
+- Ver cómo cambian las indicaciones al agregar/quitar solicitudes
+- Experimentar con diferentes configuraciones
+- Copiar/imprimir resultados consolidados
+
+#### 📝 Git
+- Branch: `feature/solicitudes-multiples`
+- 7 commits realizados:
+  1. `fb0c560` - Sistema inicial de solicitudes
+  2. `eee8686` - Fix practicasSeleccionadasMap
+  3. `3ae91c4` - Fix consolidación
+  4. `197c836` - Mejoras UX (botones, renombrado)
+  5. `c7e8ad8` - Limpiar Selección sin confirmación
+  6. `efe2de4` - Toast notifications y panel fijo
+  7. `501f98b` - Auto-selección de texto (intentado)
+
+#### ⚠️ Pendiente
+- Merge a `main` después de testing
+- Fix definitivo para auto-selección de texto en campos
+- Investigación de GLUCOSA/GLUCEMIA sin ayuno (fila 683 Excel)
+
+---
+
+## [1.7.0] - 2025-10-27
+
+### 🐛 Bug Fixes y Mejoras
+
+#### 🐛 Corregido
+- **Búsqueda en tab Relaciones**:
+  - Fixed filtro de grupos (no actualizaba lista)
+  - Fixed filtro de prácticas (no actualizaba lista)
+  - Reemplazado patrón `<select>` con `<div>` list filtrable
+  - Aplicado mismo patrón que simulador de indicaciones
+  - Múltiples intentos (v=5 a v=8) hasta encontrar solución definitiva
+
+---
 
 ## [1.6.0] - 2025-10-24
 

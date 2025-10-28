@@ -642,16 +642,14 @@ function actualizarPracticasSeleccionadas() {
     // Actualizar contador
     countSpan.textContent = practicasSeleccionadasMap.size;
 
-    // Mostrar/ocultar sección
-    if (practicasSeleccionadasMap.size === 0) {
-        section.style.display = 'none';
-        return;
-    }
-
-    section.style.display = 'block';
-
     // Limpiar container
     container.innerHTML = '';
+
+    // Si no hay prácticas, mostrar mensaje placeholder
+    if (practicasSeleccionadasMap.size === 0) {
+        container.innerHTML = '<div style="color: #666; font-style: italic; text-align: center; margin-top: 10px;">Selecciona prácticas para comenzar</div>';
+        return;
+    }
 
     // Agregar badges de prácticas seleccionadas desde el Map
     practicasSeleccionadasMap.forEach((data, id) => {
@@ -684,5 +682,37 @@ function actualizarPracticasSeleccionadas() {
         container.appendChild(badge);
     });
 }
+
+// Exponer el Map y funciones al scope global para que solicitudes.js pueda accederlo
+window.practicasSeleccionadasMap = practicasSeleccionadasMap;
+window.actualizarPracticasSeleccionadas = actualizarPracticasSeleccionadas;
+
+// ===================================================================
+// AUTO-SELECCIÓN DE TEXTO EN CAMPOS DE BÚSQUEDA
+// ===================================================================
+// Agregar listeners para auto-seleccionar texto al hacer focus
+document.addEventListener('DOMContentLoaded', function() {
+    const searchFields = [
+        'search-practicas',           // Simulador
+        'search-practicas-list',      // Prácticas ABM
+        'rel-grupo-buscar',           // Relaciones - Grupos
+        'rel-practica-buscar'         // Relaciones - Prácticas
+    ];
+
+    searchFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            // Usar click para mayor compatibilidad
+            field.addEventListener('click', function() {
+                this.select();
+            });
+            // También con focus por si acaso
+            field.addEventListener('focus', function() {
+                // Timeout para asegurar que se ejecute después del focus
+                setTimeout(() => this.select(), 0);
+            });
+        }
+    });
+});
 
 console.log('✅ tabs.js cargado correctamente');

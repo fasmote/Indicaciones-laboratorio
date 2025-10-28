@@ -427,18 +427,39 @@
                 </div>
 
                 <!-- ⭐ NUEVA SECCIÓN: Prácticas Seleccionadas -->
-                <div id="selected-practicas-section" style="display: none; margin-top: 20px; margin-bottom: 15px;">
+                <div id="selected-practicas-section" style="margin-top: 20px; margin-bottom: 15px;">
                     <label style="display: block; font-weight: 600; color: #333; margin-bottom: 10px;">
                         ✅ Prácticas Seleccionadas (<span id="selected-count">0</span>):
                     </label>
-                    <div id="selected-practicas-container" style="background: #e8f5e9; border: 2px solid #4caf50; border-radius: 8px; padding: 15px; min-height: 60px;">
-                        <!-- Aquí se agregarán los badges de prácticas seleccionadas -->
+                    <div id="selected-practicas-container" style="background: #e8f5e9; border: 2px solid #4caf50; border-radius: 8px; padding: 15px; min-height: 80px;">
+                        <div style="color: #666; font-style: italic; text-align: center; margin-top: 10px;">Selecciona prácticas para comenzar</div>
                     </div>
                 </div>
 
-                <button class="btn btn-success" onclick="generarIndicaciones()">
-                    🚀 Generar Indicaciones
-                </button>
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <button class="btn btn-success" onclick="consolidarYGenerar()" style="flex: 1; min-width: 200px;">
+                        📊 Consolidar y Generar
+                    </button>
+                    <button class="btn btn-primary" onclick="guardarComoSolicitud()" style="background: #2196F3; flex: 1; min-width: 180px;">
+                        🗂️ Guardar como Solicitud
+                    </button>
+                    <button class="btn" onclick="limpiarSeleccion()" style="background: #ff9800; color: white; min-width: 150px;">
+                        🧹 Limpiar Selección
+                    </button>
+                    <button class="btn" onclick="limpiarTodo()" style="background: #f44336; color: white; min-width: 150px;">
+                        🗑️ Limpiar Todo
+                    </button>
+                </div>
+
+                <!-- ⭐ NUEVA SECCIÓN: Solicitudes Guardadas -->
+                <div id="solicitudes-section" style="display: none; margin-bottom: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ddd;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0; color: #333;">📋 Solicitudes Guardadas (<span id="solicitudes-count">0</span>)</h3>
+                    </div>
+                    <div id="solicitudes-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Aquí se mostrarán las solicitudes guardadas -->
+                    </div>
+                </div>
 
                 <div id="result-container" style="display: none;" class="result-section">
                     <h3>📋 Indicaciones Generadas</h3>
@@ -671,8 +692,9 @@
 
     <script src="/js/api.js?v=4"></script>
     <script src="/js/utils.js?v=2"></script>
-    <script src="/js/tabs.js?v=2"></script>
+    <script src="/js/tabs.js?v=7"></script>
     <script src="/js/crud.js?v=1"></script>
     <script src="/js/relaciones.js?v=10"></script>
+    <script src="/js/solicitudes.js?v=6"></script>
 </body>
 </html>
