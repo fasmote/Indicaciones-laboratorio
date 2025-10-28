@@ -259,23 +259,38 @@ const SolicitudesMultiples = (() => {
             const todasLasPracticas = [];
             const idsUnicos = new Set();
 
-            solicitudes.forEach(solicitud => {
+            console.log('📊 Iniciando consolidación...');
+            console.log('📋 Solicitudes a consolidar:', solicitudes);
+
+            solicitudes.forEach((solicitud, idx) => {
+                console.log(`   Solicitud ${idx + 1} (${solicitud.nombre}):`, solicitud.practicas);
                 solicitud.practicas.forEach(practica => {
+                    console.log(`      - Práctica ID ${practica.id}: ${practica.nombre}`);
                     if (!idsUnicos.has(practica.id)) {
                         idsUnicos.add(practica.id);
                         todasLasPracticas.push(practica);
+                    } else {
+                        console.log(`      ⚠️ Práctica ${practica.id} duplicada, ignorando`);
                     }
                 });
             });
 
             console.log(`📊 Consolidando ${solicitudes.length} solicitudes...`);
             console.log(`🧪 Total de prácticas únicas: ${todasLasPracticas.length}`);
+            console.log('🔢 IDs únicos:', Array.from(idsUnicos));
 
             // Obtener IDs
             const ids = Array.from(idsUnicos);
 
+            if (ids.length === 0) {
+                alert('⚠️ No se encontraron prácticas para consolidar');
+                return;
+            }
+
             // Llamar al backend para generar indicaciones consolidadas
+            console.log('🌐 Llamando a API.generarIndicaciones con IDs:', ids);
             const response = await API.generarIndicaciones(ids);
+            console.log('✅ Respuesta del backend:', response);
 
             // Mostrar resultados
             mostrarResultadosConsolidados(response.data, todasLasPracticas, solicitudes.length);
@@ -283,7 +298,7 @@ const SolicitudesMultiples = (() => {
             console.log('✅ Consolidación exitosa');
 
         } catch (error) {
-            console.error('Error al consolidar solicitudes:', error);
+            console.error('❌ Error al consolidar solicitudes:', error);
             alert('❌ Error al consolidar: ' + error.message);
         }
     }
@@ -351,7 +366,15 @@ const SolicitudesMultiples = (() => {
             margin-bottom: 20px;
         `;
 
-        const indicacionesHTML = data.indicaciones_consolidadas
+        // Las indicaciones pueden venir como array de strings o como string con saltos de línea
+        let indicacionesArray = [];
+        if (Array.isArray(data.indicaciones_consolidadas)) {
+            indicacionesArray = data.indicaciones_consolidadas;
+        } else if (typeof data.indicaciones_consolidadas === 'string') {
+            indicacionesArray = data.indicaciones_consolidadas.split('\n').filter(s => s.trim());
+        }
+
+        const indicacionesHTML = indicacionesArray
             .map(texto => `<div style="padding: 10px 0; border-bottom: 1px solid #e0e0e0;">✓ ${texto}</div>`)
             .join('');
 
