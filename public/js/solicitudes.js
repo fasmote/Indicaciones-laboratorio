@@ -16,6 +16,88 @@
 const SolicitudesMultiples = (() => {
     /**
      * ============================================
+     * SISTEMA DE NOTIFICACIONES TOAST
+     * ============================================
+     */
+    function mostrarToast(mensaje, tipo = 'info') {
+        // Crear elemento toast
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease-out;
+            max-width: 400px;
+        `;
+
+        // Colores según tipo
+        const colores = {
+            success: '#4caf50',
+            error: '#f44336',
+            warning: '#ff9800',
+            info: '#2196f3'
+        };
+        toast.style.background = colores[tipo] || colores.info;
+
+        // Iconos según tipo
+        const iconos = {
+            success: '✓',
+            error: '✗',
+            warning: '⚠',
+            info: 'ℹ'
+        };
+        const icono = iconos[tipo] || iconos.info;
+
+        toast.innerHTML = `<span style="margin-right: 10px; font-size: 1.2em;">${icono}</span>${mensaje}`;
+
+        // Agregar al body
+        document.body.appendChild(toast);
+
+        // Remover después de 3 segundos
+        setTimeout(() => {
+            toast.style.animation = 'slideOut 0.3s ease-in';
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 3000);
+    }
+
+    // Agregar animaciones CSS si no existen
+    if (!document.getElementById('toast-animations')) {
+        const style = document.createElement('style');
+        style.id = 'toast-animations';
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    /**
+     * ============================================
      * CONSTANTES
      * ============================================
      */
@@ -116,7 +198,8 @@ const SolicitudesMultiples = (() => {
         // Actualizar UI
         mostrarSolicitudesGuardadas();
 
-        // NO mostrar alert - guardado silencioso
+        // Toast sutil en lugar de alert
+        mostrarToast(`Guardada como "${nuevaSolicitud.nombre}"`, 'success');
         console.log(`✅ Guardada como "${nuevaSolicitud.nombre}" con ${nuevaSolicitud.cantidad} práctica(s)`);
     }
 
@@ -243,7 +326,8 @@ const SolicitudesMultiples = (() => {
         // Actualizar UI
         mostrarSolicitudesGuardadas();
 
-        alert(`✅ "${solicitud.nombre}" eliminada correctamente`);
+        // Toast en lugar de alert
+        mostrarToast(`"${solicitud.nombre}" eliminada`, 'success');
     }
 
     /**
@@ -571,7 +655,8 @@ const SolicitudesMultiples = (() => {
         // Cerrar resultados si están abiertos
         cerrarResultados();
 
-        alert('✅ Todo limpiado correctamente');
+        // Toast en lugar de alert
+        mostrarToast('Todo limpiado correctamente', 'success');
     }
 
     /**

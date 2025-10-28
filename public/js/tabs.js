@@ -642,16 +642,14 @@ function actualizarPracticasSeleccionadas() {
     // Actualizar contador
     countSpan.textContent = practicasSeleccionadasMap.size;
 
-    // Mostrar/ocultar sección
-    if (practicasSeleccionadasMap.size === 0) {
-        section.style.display = 'none';
-        return;
-    }
-
-    section.style.display = 'block';
-
     // Limpiar container
     container.innerHTML = '';
+
+    // Si no hay prácticas, mostrar mensaje placeholder
+    if (practicasSeleccionadasMap.size === 0) {
+        container.innerHTML = '<div style="color: #666; font-style: italic; text-align: center; margin-top: 10px;">Selecciona prácticas para comenzar</div>';
+        return;
+    }
 
     // Agregar badges de prácticas seleccionadas desde el Map
     practicasSeleccionadasMap.forEach((data, id) => {
