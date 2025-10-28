@@ -116,7 +116,8 @@ const SolicitudesMultiples = (() => {
         // Actualizar UI
         mostrarSolicitudesGuardadas();
 
-        alert(`✅ Guardada como "${nuevaSolicitud.nombre}" con ${nuevaSolicitud.cantidad} práctica(s)`);
+        // NO mostrar alert - guardado silencioso
+        console.log(`✅ Guardada como "${nuevaSolicitud.nombre}" con ${nuevaSolicitud.cantidad} práctica(s)`);
     }
 
     /**
@@ -494,7 +495,34 @@ const SolicitudesMultiples = (() => {
     }
 
     /**
-     * Limpiar TODO: selección actual + solicitudes guardadas
+     * Limpiar SOLO la selección actual (sin confirmación)
+     */
+    function limpiarSeleccion() {
+        const practicasSeleccionadasMap = window.practicasSeleccionadasMap;
+
+        if (!practicasSeleccionadasMap || practicasSeleccionadasMap.size === 0) {
+            // No hay nada que limpiar, no hacer nada
+            return;
+        }
+
+        // Limpiar el Map
+        practicasSeleccionadasMap.clear();
+
+        // Desmarcar checkboxes
+        document.querySelectorAll('#practicas-list input[type="checkbox"]').forEach(cb => {
+            cb.checked = false;
+        });
+
+        // Actualizar vista de seleccionadas
+        if (typeof window.actualizarPracticasSeleccionadas === 'function') {
+            window.actualizarPracticasSeleccionadas();
+        }
+
+        console.log('✅ Selección limpiada');
+    }
+
+    /**
+     * Limpiar TODO: selección actual + solicitudes guardadas (con confirmación)
      */
     function limpiarTodo() {
         const confirmMsg = [];
@@ -578,6 +606,7 @@ const SolicitudesMultiples = (() => {
         copiarIndicacionesConsolidadas,
         imprimirIndicacionesConsolidadas,
         cerrarResultados,
+        limpiarSeleccion,
         limpiarTodo,
         getSolicitudes: () => solicitudes
     };
@@ -593,6 +622,7 @@ window.consolidarYGenerar = SolicitudesMultiples.consolidarYGenerar;
 window.copiarIndicacionesConsolidadas = SolicitudesMultiples.copiarIndicacionesConsolidadas;
 window.imprimirIndicacionesConsolidadas = SolicitudesMultiples.imprimirIndicacionesConsolidadas;
 window.cerrarResultados = SolicitudesMultiples.cerrarResultados;
+window.limpiarSeleccion = SolicitudesMultiples.limpiarSeleccion;
 window.limpiarTodo = SolicitudesMultiples.limpiarTodo;
 
 // Inicializar cuando el DOM esté listo
