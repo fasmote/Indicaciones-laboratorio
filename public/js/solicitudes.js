@@ -80,13 +80,20 @@ const SolicitudesMultiples = (() => {
      * Guardar la selección actual como una nueva solicitud
      */
     function guardarComoSolicitud() {
-        // Obtener prácticas seleccionadas desde tabs.js
-        const practicasSeleccionadas = window.practicasSeleccionadas || [];
+        // Obtener prácticas seleccionadas desde tabs.js (es un Map)
+        const practicasSeleccionadasMap = window.practicasSeleccionadasMap;
 
-        if (practicasSeleccionadas.length === 0) {
+        if (!practicasSeleccionadasMap || practicasSeleccionadasMap.size === 0) {
             alert('⚠️ No hay prácticas seleccionadas para guardar');
             return;
         }
+
+        // Convertir Map a array de prácticas
+        const practicasArray = Array.from(practicasSeleccionadasMap.entries()).map(([id, data]) => ({
+            id: id,
+            nombre: data.nombre,
+            codigo: data.codigo || 'N/A'
+        }));
 
         // Incrementar contador
         contadorSolicitudes++;
@@ -95,13 +102,9 @@ const SolicitudesMultiples = (() => {
         const nuevaSolicitud = {
             id: contadorSolicitudes,
             nombre: `Solicitud ${contadorSolicitudes}`,
-            practicas: practicasSeleccionadas.map(p => ({
-                id: p.id_practica,
-                nombre: p.nombre,
-                codigo: p.codigo_did
-            })),
+            practicas: practicasArray,
             fecha: new Date().toISOString(),
-            cantidad: practicasSeleccionadas.length
+            cantidad: practicasArray.length
         };
 
         // Agregar a la lista
