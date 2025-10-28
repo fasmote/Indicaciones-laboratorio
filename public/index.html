@@ -436,9 +436,27 @@
                     </div>
                 </div>
 
-                <button class="btn btn-success" onclick="generarIndicaciones()">
-                    🚀 Generar Indicaciones
-                </button>
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn btn-success" onclick="generarIndicaciones()">
+                        🚀 Generar Indicaciones
+                    </button>
+                    <button class="btn btn-primary" onclick="guardarComoSolicitud()" style="background: #2196F3;">
+                        🗂️ Guardar como Solicitud
+                    </button>
+                </div>
+
+                <!-- ⭐ NUEVA SECCIÓN: Solicitudes Guardadas -->
+                <div id="solicitudes-section" style="display: none; margin-bottom: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 1px solid #ddd;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0; color: #333;">📋 Solicitudes Guardadas (<span id="solicitudes-count">0</span>)</h3>
+                        <button class="btn btn-warning" onclick="consolidarTodasLasSolicitudes()" style="background: #FF9800; font-size: 0.95rem;">
+                            📊 Consolidar TODAS
+                        </button>
+                    </div>
+                    <div id="solicitudes-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Aquí se mostrarán las solicitudes guardadas -->
+                    </div>
+                </div>
 
                 <div id="result-container" style="display: none;" class="result-section">
                     <h3>📋 Indicaciones Generadas</h3>
@@ -674,5 +692,6 @@
     <script src="/js/tabs.js?v=2"></script>
     <script src="/js/crud.js?v=1"></script>
     <script src="/js/relaciones.js?v=10"></script>
+    <script src="/js/solicitudes.js?v=1"></script>
 </body>
 </html>
