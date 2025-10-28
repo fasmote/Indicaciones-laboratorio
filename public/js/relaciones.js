@@ -35,7 +35,7 @@ async function inicializarRelaciones() {
         todasLasPracticas = responsePracticas.data;
 
         actualizarSelectIndicaciones();
-        actualizarSelectPracticas();
+        mostrarPracticasEnLista(todasLasPracticas);
 
         // Configurar event listeners
         configurarEventListeners();
@@ -223,58 +223,82 @@ function actualizarSelectIndicaciones() {
 }
 
 /**
- * Actualizar el selector de prácticas
+ * Variable global para práctica seleccionada
  */
-function actualizarSelectPracticas(filtradas = null) {
-    const select = document.getElementById('rel-practica-select');
-    const valorActual = select.value; // Guardar selección actual
+let practicaSeleccionadaParaAgregar = null;
 
-    const practicas = filtradas || todasLasPracticas;
+/**
+ * Mostrar prácticas en la lista filtrable (como grupos y simulador)
+ */
+function mostrarPracticasEnLista(practicas) {
+    const container = document.getElementById('rel-practicas-list');
 
-    // Limpiar todas las opciones existentes
-    select.options.length = 0;
-
-    // Agregar opción por defecto
-    const defaultOption = new Option('-- Selecciona una práctica --', '');
-    select.add(defaultOption);
-
-    // Agregar cada práctica como nueva opción
-    practicas.forEach(prac => {
-        const textoOpcion = `${prac.codigo_did} - ${prac.nombre}`;
-        const option = new Option(textoOpcion, prac.id_practica);
-        select.add(option);
-    });
-
-    console.log('[DEBUG] Select de prácticas actualizado con', select.options.length, 'opciones');
-
-    // Restaurar selección si aún existe
-    if (valorActual && practicas.some(p => p.id_practica == valorActual)) {
-        select.value = valorActual;
+    if (!practicas || practicas.length === 0) {
+        container.innerHTML = '<p style="color: #999; font-style: italic;">No se encontraron prácticas.</p>';
+        return;
     }
 
-    // Forzar refresco visual
-    select.style.display = 'none';
-    select.offsetHeight; // Force reflow
-    select.style.display = '';
+    let html = '';
+    practicas.forEach(prac => {
+        const textoPractica = `${prac.codigo_did} - ${prac.nombre}`;
+        const areaTexto = prac.area ? prac.area.nombre : 'Sin área';
+        html += `
+            <div class="practica-item" data-practica-id="${prac.id_practica}" style="padding: 8px; margin: 4px 0; background: #f8f9fa; border-radius: 4px; cursor: pointer; border: 2px solid transparent;">
+                <label style="cursor: pointer; display: block; user-select: none;" onclick="seleccionarPractica(${prac.id_practica})">
+                    <strong>${textoPractica}</strong>
+                    <br><small style="color: #666;">Área: ${areaTexto}</small>
+                </label>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+    console.log('[DEBUG] Lista de prácticas actualizada con', practicas.length, 'prácticas');
 }
 
 /**
- * Buscar prácticas por término
+ * Buscar prácticas por término (como grupos)
  */
 async function buscarPracticasParaRelacion() {
-    const termino = document.getElementById('rel-practica-buscar').value.trim();
+    const searchText = document.getElementById('rel-practica-buscar').value.toLowerCase();
+    console.log('[DEBUG] Buscando prácticas con término:', searchText);
 
-    if (termino === '') {
-        actualizarSelectPracticas();
+    if (searchText === '') {
+        mostrarPracticasEnLista(todasLasPracticas);
         return;
     }
 
     try {
-        const response = await API.listarPracticas({ buscar: termino, limit: 50 });
-        actualizarSelectPracticas(response.data);
+        // Buscar en el servidor para obtener más resultados
+        const response = await API.listarPracticas({ buscar: searchText, limit: 100 });
+        console.log('[DEBUG] Prácticas encontradas:', response.data.length);
+        mostrarPracticasEnLista(response.data);
     } catch (error) {
         console.error('Error al buscar prácticas:', error);
     }
+}
+
+/**
+ * Seleccionar una práctica de la lista
+ */
+function seleccionarPractica(idPractica) {
+    console.log('[DEBUG] Práctica seleccionada:', idPractica);
+
+    // Remover selección anterior en lista de prácticas
+    document.querySelectorAll('#rel-practicas-list .practica-item').forEach(item => {
+        item.style.border = '2px solid transparent';
+        item.style.background = '#f8f9fa';
+    });
+
+    // Marcar nueva práctica seleccionada
+    const itemSeleccionado = document.querySelector(`#rel-practicas-list [data-practica-id="${idPractica}"]`);
+    if (itemSeleccionado) {
+        itemSeleccionado.style.border = '2px solid #4CAF50';
+        itemSeleccionado.style.background = '#e8f5e9';
+    }
+
+    // Guardar práctica seleccionada
+    practicaSeleccionadaParaAgregar = idPractica;
 }
 
 /**
@@ -446,30 +470,35 @@ async function removerIndicacionDelGrupo(idIndicacion) {
  * Limpiar el formulario de práctica
  */
 function limpiarFormularioPractica() {
-    document.getElementById('rel-practica-select').value = '';
     document.getElementById('rel-practica-buscar').value = '';
+    practicaSeleccionadaParaAgregar = null;
+
+    // Remover selección visual
+    document.querySelectorAll('#rel-practicas-list .practica-item').forEach(item => {
+        item.style.border = '2px solid transparent';
+        item.style.background = '#f8f9fa';
+    });
+
     // Restaurar lista completa de prácticas
-    actualizarSelectPracticas();
+    mostrarPracticasEnLista(todasLasPracticas);
 }
 
 /**
- * Agregar una práctica al grupo seleccionado
+ * Agregar la práctica seleccionada al grupo
  */
-async function agregarPracticaAGrupo() {
+async function agregarPracticaSeleccionada() {
     if (!grupoSeleccionado) {
         alert('⚠️ Por favor selecciona un grupo primero');
         return;
     }
 
-    const idPractica = document.getElementById('rel-practica-select').value;
-
-    if (!idPractica) {
-        alert('⚠️ Por favor selecciona una práctica');
+    if (!practicaSeleccionadaParaAgregar) {
+        alert('⚠️ Por favor selecciona una práctica de la lista');
         return;
     }
 
     try {
-        await API.agregarPracticaAGrupo(grupoSeleccionado, parseInt(idPractica));
+        await API.agregarPracticaAGrupo(grupoSeleccionado, parseInt(practicaSeleccionadaParaAgregar));
 
         // Limpiar formulario
         limpiarFormularioPractica();
@@ -517,6 +546,7 @@ window.agregarIndicacionAGrupo = agregarIndicacionAGrupo;
 window.limpiarFormularioIndicacion = limpiarFormularioIndicacion;
 window.removerIndicacionDelGrupo = removerIndicacionDelGrupo;
 window.buscarPracticasParaRelacion = buscarPracticasParaRelacion;
-window.agregarPracticaAGrupo = agregarPracticaAGrupo;
+window.seleccionarPractica = seleccionarPractica;
+window.agregarPracticaSeleccionada = agregarPracticaSeleccionada;
 window.limpiarFormularioPractica = limpiarFormularioPractica;
 window.removerPracticaDelGrupo = removerPracticaDelGrupo;

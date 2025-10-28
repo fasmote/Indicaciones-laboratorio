@@ -643,18 +643,17 @@
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
                         <h3 style="margin-top: 0;">📋 Prácticas del Grupo</h3>
 
-                        <div class="form-group">
-                            <label>Buscar Práctica:</label>
-                            <input type="text" id="rel-practica-buscar" placeholder="Buscar por código o nombre...">
+                        <div class="search-box">
+                            <input type="text" id="rel-practica-buscar" class="search-input" placeholder="🔍 Buscar práctica por código o nombre...">
                         </div>
 
                         <div class="form-group">
-                            <label>Agregar Práctica:</label>
-                            <select id="rel-practica-select">
-                                <option value="">-- Selecciona una práctica --</option>
-                            </select>
-                            <button class="btn btn-success" onclick="agregarPracticaAGrupo()" style="margin-left: 10px;">
-                                ➕ Agregar
+                            <label>Selecciona una Práctica para Agregar:</label>
+                            <div id="rel-practicas-list" class="checkbox-group" style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px; margin-bottom: 10px;">
+                                <div class="loading">Cargando prácticas...</div>
+                            </div>
+                            <button class="btn btn-success" onclick="agregarPracticaSeleccionada()">
+                                ➕ Agregar Práctica al Grupo
                             </button>
                             <button class="btn btn-secondary" onclick="limpiarFormularioPractica()" style="margin-left: 5px;">
                                 🧹 Limpiar
@@ -674,6 +673,6 @@
     <script src="/js/utils.js?v=2"></script>
     <script src="/js/tabs.js?v=2"></script>
     <script src="/js/crud.js?v=1"></script>
-    <script src="/js/relaciones.js?v=9"></script>
+    <script src="/js/relaciones.js?v=10"></script>
 </body>
 </html>
