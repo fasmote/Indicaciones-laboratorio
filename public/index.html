@@ -416,7 +416,7 @@
                 <p style="margin-bottom: 15px; color: #666;">Selecciona las prácticas que se van a realizar y el sistema generará las indicaciones optimizadas.</p>
 
                 <div class="search-box">
-                    <input type="text" id="search-practicas" class="search-input" placeholder="🔍 Buscar prácticas por nombre..." onkeyup="filtrarPracticas()">
+                    <input type="text" id="search-practicas" class="search-input" placeholder="🔍 Buscar prácticas por nombre..." onkeyup="filtrarPracticas()" onfocus="this.select()">
                 </div>
 
                 <div class="form-group">
@@ -513,7 +513,7 @@
                 <hr style="margin: 20px 0; border: 1px solid #ddd;">
 
                 <div class="search-box">
-                    <input type="text" id="search-practicas-list" class="search-input" placeholder="🔍 Buscar en lista..." onkeyup="filtrarListaPracticas()">
+                    <input type="text" id="search-practicas-list" class="search-input" placeholder="🔍 Buscar en lista..." onkeyup="filtrarListaPracticas()" onfocus="this.select()">
                 </div>
 
                 <div id="practicas-container">
@@ -625,7 +625,7 @@
 
                 <!-- Selector de Grupo -->
                 <div class="search-box">
-                    <input type="text" id="rel-grupo-buscar" class="search-input" placeholder="🔍 Buscar grupo por nombre...">
+                    <input type="text" id="rel-grupo-buscar" class="search-input" placeholder="🔍 Buscar grupo por nombre..." onfocus="this.select()">
                 </div>
 
                 <div class="form-group">
@@ -665,7 +665,7 @@
                         <h3 style="margin-top: 0;">📋 Prácticas del Grupo</h3>
 
                         <div class="search-box">
-                            <input type="text" id="rel-practica-buscar" class="search-input" placeholder="🔍 Buscar práctica por código o nombre...">
+                            <input type="text" id="rel-practica-buscar" class="search-input" placeholder="🔍 Buscar práctica por código o nombre..." onfocus="this.select()">
                         </div>
 
                         <div class="form-group">
@@ -692,7 +692,7 @@
 
     <script src="/js/api.js?v=4"></script>
     <script src="/js/utils.js?v=2"></script>
-    <script src="/js/tabs.js?v=5"></script>
+    <script src="/js/tabs.js?v=6"></script>
     <script src="/js/crud.js?v=1"></script>
     <script src="/js/relaciones.js?v=10"></script>
     <script src="/js/solicitudes.js?v=6"></script>
